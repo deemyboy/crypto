@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, Dimensions } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -24,17 +24,16 @@ export default function HomeScreen() {
   }, []);
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#160028', dark: '#160028' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('@/assets/images/crypto-logo.png')}
+          style={styles.logo}
         />
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+        <ThemedText type="title">CRYP-TOE!</ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
@@ -78,15 +77,17 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#160028',
     gap: 8,
   },
   stepContainer: {
     gap: 8,
     marginBottom: 8,
+    backgroundColor: '#160028',
   },
-  reactLogo: {
+  logo: {
     height: 178,
-    width: 290,
+    width: Dimensions.get('screen').width,
     bottom: 0,
     left: 0,
     position: 'absolute',
