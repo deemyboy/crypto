@@ -1,9 +1,5 @@
-// request constants
-export const tickers = {
-  eth: 'eth-ethereum',
-  bit: 'btc-bitcoin',
-};
+export const CURRENCIES = { gbp: 'GBP', usd: 'USD' };
 
-export const currencies = 'GBP,USD';
-
-export const dataEndpoint = 'https://api.coinpaprika.com/v1/tickers/';
+// request urls
+export const TICKERS_DATA_END_POINT = 'https://api.coinpaprika.com/v1/tickers/';
+export const COINS_DATA_END_POINT = 'https://api.coinpaprika.com/v1/coins/';
