@@ -36,3 +36,11 @@ yarn-error.*
 *.tsbuildinfo
 
 .yarn/
+
+#build files
+build*
+
+# eas build related files/folders
+.idea/
+.ios/
+.android/

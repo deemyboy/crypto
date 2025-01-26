@@ -1189,6 +1189,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/bangers@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@expo-google-fonts/bangers@npm:0.2.3"
+  checksum: 10c0/2dc0973116430780b2ee260d60453ef3076661936d98ec3b970240bbf47e14d0b4744f4a48737c5b41e74677bbed7ff460c851610080c0242d0999d4894592d4
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/inter@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@expo-google-fonts/inter@npm:0.2.3"
+  checksum: 10c0/f26f071896c18adda4e479ec31192053163b39a2c5cbf7b2d5ecb7d6eef63262ba8aaf462897f503d06151f059c1ead01573797e709afb6d0d20555238625365
+  languageName: node
+  linkType: hard
+
 "@expo-google-fonts/roboto@npm:^0.2.3":
   version: 0.2.3
   resolution: "@expo-google-fonts/roboto@npm:0.2.3"
@@ -3963,6 +3977,8 @@ __metadata:
   resolution: "crypto@workspace:."
   dependencies:
     "@babel/core": "npm:^7.25.2"
+    "@expo-google-fonts/bangers": "npm:^0.2.3"
+    "@expo-google-fonts/inter": "npm:^0.2.3"
     "@expo-google-fonts/roboto": "npm:^0.2.3"
     "@expo-google-fonts/shadows-into-light-two": "npm:^0.2.3"
     "@expo/vector-icons": "npm:^14.0.2"
@@ -3992,9 +4008,9 @@ __metadata:
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-native: "npm:0.76.6"
+    react-native-element-dropdown: "npm:^2.12.4"
     react-native-gesture-handler: "npm:~2.20.2"
     react-native-paper: "npm:^5.13.1"
-    react-native-paper-dropdown: "npm:^2.3.1"
     react-native-reanimated: "npm:~3.16.1"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
@@ -8488,6 +8504,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-element-dropdown@npm:^2.12.4":
+  version: 2.12.4
+  resolution: "react-native-element-dropdown@npm:2.12.4"
+  dependencies:
+    lodash: "npm:^4.17.21"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/0f0bce59355112893612fd6b7dca4b181ef1998986ead27623cdce3c44093bda5d471dc0e907072472094d1c02437cb5a436ad9ff4e07333e03eb0cc85283544
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:~2.20.2":
   version: 2.20.2
   resolution: "react-native-gesture-handler@npm:2.20.2"
@@ -8526,20 +8554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-paper-dropdown@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "react-native-paper-dropdown@npm:2.3.1"
-  dependencies:
-    react-native-paper: "npm:^5.12.3"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-    react-native-paper: "*"
-  checksum: 10c0/528b0ace0ed2d0a37f7fc08112997ce5fc8d7e860d4951797aae7d76b0284653916ecdd56b0f064ab844dad6c2eeb07be3941490bae4db34f81b7bd9bf51d9b5
-  languageName: node
-  linkType: hard
-
-"react-native-paper@npm:^5.12.3, react-native-paper@npm:^5.13.1":
+"react-native-paper@npm:^5.13.1":
   version: 5.13.1
   resolution: "react-native-paper@npm:5.13.1"
   dependencies:

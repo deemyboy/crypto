@@ -1,9 +1,13 @@
-import { CURRENCIES } from '@/constants/Api';
+import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
-export type TOption = {
-  label: string;
-  value: string;
-};
+export type TTicker = typeof SPECS_TICKERS;
+export type TTickerKey = keyof TTicker;
+export type TTickerValue = TTicker[TTickerKey];
+
+export type TCurrency = typeof SPECS_CURRENCIES;
+export type TCurrencyKey = keyof typeof SPECS_CURRENCIES;
+export type TCurrencyValue =
+  (typeof SPECS_CURRENCIES)[keyof typeof SPECS_CURRENCIES];
 
 export type TCoinData = {
   id: string;
@@ -48,38 +52,51 @@ export type TTickerData = {
   total_supply: number;
 };
 
-export type TCoinsContext = {
-  currency: keyof typeof CURRENCIES;
-  setCurrency: React.Dispatch<React.SetStateAction<keyof typeof CURRENCIES>>;
-  price: string;
-  setPrice: React.Dispatch<React.SetStateAction<string>>;
-  selectedTickerOption: TOption | null;
-  setSelectedTickerOption: React.Dispatch<React.SetStateAction<TOption | null>>;
-  ticker: string;
-  setTicker: React.Dispatch<React.SetStateAction<string>>;
-  reloading: boolean; // Fix for the "reloading" property
-  setReloading: React.Dispatch<React.SetStateAction<boolean>>;
-  tickerOptions: TOption[] | null;
-  setTickerOptions: React.Dispatch<React.SetStateAction<TOption[]>>;
-  tickerData?: TTickerData | null;
-  setTickerData: React.Dispatch<React.SetStateAction<TTickerData | undefined>>;
-  firstTwentyCoinsData: TCoinData[];
-  setFirstTwentyCoinsData: React.Dispatch<React.SetStateAction<TCoinData[]>>;
-  fetchingData: boolean;
-  setFetchingData: React.Dispatch<React.SetStateAction<boolean>>;
-  rotating: boolean;
-  handleTickerSelect: (value: string) => void;
-  handleCurrencyChange: (newCurrency: keyof typeof CURRENCIES) => void;
-  formatCurrency: (amount: number, currency: string) => string;
+export type TSimplifiedTickerData = {
+  name: string;
+  symbol: string;
+  last_updated: string;
+  quotes: {
+    USD: { price: string };
+    GBP: { price: string };
+  };
 };
 
-export type InputContextType = {
-  calculation: string | null;
-  pressedKeys: string[];
-  result: number | null;
-  secondMathFunctionSymbol: string | null;
-  memory: number | null;
-  updatePressedKeys: (key: string) => void;
-  resetUserInput: () => void;
-  removeLastPressedKey: () => void;
+export type TCombinedTickerData = {
+  'btc-bitcoin': TSimplifiedTickerData | null;
+  'eth-ethereum': TSimplifiedTickerData | null;
+};
+
+export type TPreferencesContext = {
+  isThemeDark: boolean;
+  toggleTheme: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type Option = {
+  label: string;
+  value: string;
+};
+
+export type TCoinsContext = {
+  currency: TCurrencyValue;
+  setCurrencyKey: React.Dispatch<React.SetStateAction<TCurrencyKey>>;
+  price: string;
+  selectedTickerOption: Option | null;
+  ticker: TTickerValue;
+  tickerKey: TTickerKey;
+  setTickerKey: React.Dispatch<React.SetStateAction<TTickerKey>>;
+  refreshing: boolean;
+  setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
+  tickerOptions: Option[];
+  tickerData?: TSimplifiedTickerData | null;
+  fetchingData: boolean;
+  setFetchingData: React.Dispatch<React.SetStateAction<boolean>>;
+  handleTickerSelect: (value: TTickerKey) => void;
+  handleCurrencyChange: (value: TCurrencyKey) => void;
+  combinedTickerData: TCombinedTickerData | null;
+};
+
+export type TPrices = {
+  gbp: string;
+  usd: string;
 };
