@@ -1189,31 +1189,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo-google-fonts/bangers@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/bangers@npm:0.2.3"
-  checksum: 10c0/2dc0973116430780b2ee260d60453ef3076661936d98ec3b970240bbf47e14d0b4744f4a48737c5b41e74677bbed7ff460c851610080c0242d0999d4894592d4
-  languageName: node
-  linkType: hard
-
-"@expo-google-fonts/inter@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/inter@npm:0.2.3"
-  checksum: 10c0/f26f071896c18adda4e479ec31192053163b39a2c5cbf7b2d5ecb7d6eef63262ba8aaf462897f503d06151f059c1ead01573797e709afb6d0d20555238625365
-  languageName: node
-  linkType: hard
-
 "@expo-google-fonts/roboto@npm:^0.2.3":
   version: 0.2.3
   resolution: "@expo-google-fonts/roboto@npm:0.2.3"
   checksum: 10c0/f2557d888f881003240b74fb015840f4c68ceef610d57f6c492b86fc8b5056d453a9bd824d95bdd258cae61d39d633ff027a182d52c7fd2850379afdee14117b
-  languageName: node
-  linkType: hard
-
-"@expo-google-fonts/shadows-into-light-two@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/shadows-into-light-two@npm:0.2.3"
-  checksum: 10c0/c358071c8eddc1f1b1dc465d974dacc762baed9930e707217c4590332ec49d6407587a07b0f9137eb172a7c5fcc09bc41213637f032e8016593149b53312a1ce
   languageName: node
   linkType: hard
 
@@ -4016,10 +3995,7 @@ __metadata:
   resolution: "crypto@workspace:."
   dependencies:
     "@babel/core": "npm:^7.25.2"
-    "@expo-google-fonts/bangers": "npm:^0.2.3"
-    "@expo-google-fonts/inter": "npm:^0.2.3"
     "@expo-google-fonts/roboto": "npm:^0.2.3"
-    "@expo-google-fonts/shadows-into-light-two": "npm:^0.2.3"
     "@expo/vector-icons": "npm:^14.0.2"
     "@react-navigation/bottom-tabs": "npm:^7.2.0"
     "@react-navigation/native": "npm:^7.0.14"
