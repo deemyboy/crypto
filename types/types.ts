@@ -1,12 +1,23 @@
 import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
-export type TTicker = typeof SPECS_TICKERS;
-export type TTickerKey = keyof TTicker;
-export type TTickerValue = TTicker[TTickerKey];
+/****** api *******/
 
-export type TCurrency = typeof SPECS_CURRENCIES;
-export type TCurrencyKey = keyof TCurrency;
-export type TCurrencyValue = TCurrency[TCurrencyKey];
+export type TDefaults = {
+  ticker: TTickerValue;
+  tickerKey: TTickerKey;
+  currency: TCurrencyValue;
+  currencyKey: TCurrencyKey;
+};
+
+/****** CoinsContext *******/
+
+export type TTickerMap = typeof SPECS_TICKERS;
+export type TTickerKey = keyof TTickerMap;
+export type TTickerValue = TTickerMap[TTickerKey];
+
+export type TCurrencyMap = typeof SPECS_CURRENCIES;
+export type TCurrencyKey = keyof TCurrencyMap; // "gbp" | "usd"
+export type TCurrencyValue = TCurrencyMap[TCurrencyKey]; // "GBP" | "USD"
 
 export type TCoinData = {
   id: string;
@@ -107,4 +118,24 @@ export type TTickerQuote = {
 export type TPrices = {
   gbp: string;
   usd: string;
+};
+
+/****** components *******/
+
+// toggle-panel.tsx
+export type TTogglePanelProps = {
+  trendsPanelOpen: boolean;
+  children?: React.ReactNode;
+};
+// time-ago.tsx
+export type TimeAgoProps = {
+  timestamp: string | number | Date;
+  interval?: number;
+};
+
+// trend-box.tsx
+export type TTrendBoxProps = {
+  trendKey: string;
+  trendValue: string | undefined;
+  toggleTrendsPanel: () => void;
 };

@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Text } from 'react-native-paper';
-
-type TimeAgoProps = {
-  timestamp: string | number | Date;
-  interval?: number;
-};
+import { TimeAgoProps } from '@/types/types';
 
 const TimeAgo: React.FC<TimeAgoProps> = ({ timestamp, interval = 60000 }) => {
   const [timeAgo, setTimeAgo] = useState(moment(timestamp).fromNow());

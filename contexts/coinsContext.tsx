@@ -1,23 +1,23 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { fetchTickerData } from '@/api/axios';
 
-import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import {
   TCoinsContext,
   Option,
   TTickerData,
-  TTicker,
   TCombinedTickerData,
   TCurrencyKey,
   TCurrencyValue,
   TTickerKey,
   TTickerValue,
+  TTickerMap as TTickers,
 } from '@/types/types';
 
 const CoinsContext = createContext<TCoinsContext>({
-  currency: SPECS_CURRENCIES.usd,
+  currency: DEFAULT.currency,
   selectedTickerOption: null,
-  ticker: SPECS_TICKERS.btc,
+  ticker: DEFAULT.ticker,
   tickerKey: 'btc',
   setTickerKey: () => {},
   refreshing: false,
@@ -33,11 +33,11 @@ export const useCoins = () => {
 };
 
 export const CoinsProvider = ({ children }: any) => {
-  const [currency, setCurrency] = useState<TCurrencyValue>(SPECS_CURRENCIES.usd);
-  const [currencyKey, setCurrencyKey] = useState<TCurrencyKey>('usd');
+  const [currency, setCurrency] = useState<TCurrencyValue>(DEFAULT.currency);
+  const [currencyKey, setCurrencyKey] = useState<TCurrencyKey>(DEFAULT.currencyKey);
   const [selectedTickerOption, setSelectedTickerOption] = useState<Option | null>(null);
-  const [ticker, setTicker] = useState<TTickerValue>(SPECS_TICKERS.btc);
-  const [tickerKey, setTickerKey] = useState<TTickerKey>('btc');
+  const [ticker, setTicker] = useState<TTickerValue>(DEFAULT.ticker);
+  const [tickerKey, setTickerKey] = useState<TTickerKey>(DEFAULT.tickerKey);
   const [refreshing, setRefreshing] = useState(true);
   const [tickerOptions, setTickerOptions] = useState<Option[]>([]);
   const [combinedTickerData, setCombinedTickerData] =
@@ -122,7 +122,7 @@ export const CoinsProvider = ({ children }: any) => {
     fetchAllTickerData();
   }, [fetchPriceData]);
 
-  const makeTickerOptions = (optionsData: TTicker) => {
+  const makeTickerOptions = (optionsData: TTickers) => {
     const _tickersOptions: Option[] = Object.entries(optionsData).map(([key, value]) => ({
       label: `${value.split('-')[1].toUpperCase()} - ${value.split('-')[0].toUpperCase()}`,
       value: key,

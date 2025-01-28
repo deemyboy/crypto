@@ -11,7 +11,7 @@ export const usePreferences = () => {
 };
 
 export const PreferencesProvider = ({ children }: any) => {
-  const [isThemeDark, setIsThemeDark] = useState(false);
+  const [isThemeDark, setIsThemeDark] = useState(true);
 
   const toggleTheme = useCallback(() => {
     return setIsThemeDark(!isThemeDark);
