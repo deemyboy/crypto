@@ -1,43 +1,31 @@
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { fetchTickerData } from '@/api/axios';
+
+import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import {
-  createContext,
-  Dispatch,
-  ReactElement,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { fetchCoinsData, fetchTickerData } from '@/api/axios';
-import { CURRENCIES } from '@/constants/Api';
-import { TCoinData, TCoinsContext, TOption, TTickerData } from '@/types/types';
+  TCoinsContext,
+  Option,
+  TTickerData,
+  TTicker,
+  TCombinedTickerData,
+  TCurrencyKey,
+  TCurrencyValue,
+  TTickerKey,
+  TTickerValue,
+} from '@/types/types';
 
 const CoinsContext = createContext<TCoinsContext>({
-  currency: 'gbp',
-  setCurrency: () => {},
-  price: '0',
-  setPrice: () => {},
+  currency: SPECS_CURRENCIES.usd,
   selectedTickerOption: null,
-  setSelectedTickerOption: () => {},
-  ticker: 'btc',
-  setTicker: () => {},
-  reloading: false,
-  setReloading: () => {},
-  tickerOptions: null,
-  setTickerOptions: () => {},
-  tickerData: null,
-  setTickerData: () => {},
-  firstTwentyCoinsData: [],
-  setFirstTwentyCoinsData: () => {},
-  fetchingData: true,
-  rotating: false,
-  setFetchingData: () => {},
+  ticker: SPECS_TICKERS.btc,
+  tickerKey: 'btc',
+  setTickerKey: () => {},
+  refreshing: false,
+  setRefreshing: () => {},
+  tickerOptions: [],
   handleTickerSelect: () => {},
   handleCurrencyChange: () => {},
-  formatCurrency: (amount: number, currency: string) => {
-    // Example implementation of formatCurrency
-    return `${amount.toFixed(2)} ${currency.toUpperCase()}`;
-  },
+  combinedTickerData: null,
 });
 
 export const useCoins = () => {
@@ -45,137 +33,126 @@ export const useCoins = () => {
 };
 
 export const CoinsProvider = ({ children }: any) => {
-  const [currency, setCurrency] = useState<keyof typeof CURRENCIES>('usd');
-  const [price, setPrice] = useState<string>('0');
-  const [selectedTickerOption, setSelectedTickerOption] =
-    useState<TOption | null>(null);
-  const [ticker, setTicker] = useState('btc-bitcoin');
-  const [reloading, setReloading] = useState(false);
-  const [tickerOptions, setTickerOptions] = useState<TOption[]>([]);
-  const [tickers, setTickers] = useState<string[]>([]);
-  const [tickerData, setTickerData] = useState<TTickerData>();
-  const [firstTwentyCoinsData, setFirstTwentyCoinsData] = useState<TCoinData[]>(
-    []
-  );
-  const [fetchingData, setFetchingData] = useState<boolean>(true);
-  const [rotating, setRotating] = useState<boolean>(true);
+  const [currency, setCurrency] = useState<TCurrencyValue>(SPECS_CURRENCIES.usd);
+  const [currencyKey, setCurrencyKey] = useState<TCurrencyKey>('usd');
+  const [selectedTickerOption, setSelectedTickerOption] = useState<Option | null>(null);
+  const [ticker, setTicker] = useState<TTickerValue>(SPECS_TICKERS.btc);
+  const [tickerKey, setTickerKey] = useState<TTickerKey>('btc');
+  const [refreshing, setRefreshing] = useState(true);
+  const [tickerOptions, setTickerOptions] = useState<Option[]>([]);
+  const [combinedTickerData, setCombinedTickerData] =
+    // @ts-ignore - empty object allows for dynamic typing/extension
+    useState<TCombinedTickerData>({});
 
-  const handleTickerSelect = (value: string) => {
-    setTicker(value);
-    setFetchingData(true);
+  const handleTickerSelect = (newTickerKey: TTickerKey) => {
+    const _ticker = SPECS_TICKERS[newTickerKey];
+
+    if (newTickerKey) setTickerKey(newTickerKey);
+    if (_ticker) setTicker(_ticker);
+    const _selectedTickerOption = tickerOptions.find((option) => option.value === newTickerKey);
+
+    if (_selectedTickerOption) setSelectedTickerOption(_selectedTickerOption);
   };
 
-  const formatCurrency = (amount: number, currency: string) => {
+  const formatCurrency = (amount: number, value: TCurrencyValue) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency,
+      currency: value,
     }).format(amount);
   };
-
-  const handleCurrencyChange = (newCurrency: keyof typeof CURRENCIES) => {
-    setCurrency(newCurrency);
-    setFetchingData(true);
+  const makePrice = (amount: string, currencyValue: TCurrencyValue) => {
+    return formatCurrency(Math.round(+amount * 100) / 100, currencyValue);
   };
 
-  useEffect(() => {
-    const _tickerOptions: TOption[] = firstTwentyCoinsData.map((coin) => ({
-      label: `${coin.name.toUpperCase()} - ${coin.symbol}`,
-      value: coin.id,
-    }));
-
-    _tickerOptions ? setTickerOptions(() => _tickerOptions) : [];
-
-    const _tickers: string[] = firstTwentyCoinsData.map((coin) => coin.id);
-    _tickers ? setTickers(_tickers) : [];
-    console.log(
-      '🚀  |  file: coinsContext.tsx:93  |  useEffect  |  _tickers:',
-      _tickers
-    );
-  }, [firstTwentyCoinsData]);
-
-  useEffect(() => {
-    const fetchFirstTwentyCoinsData = async () => {
-      const _coinsData = await fetchCoinsData();
-      const _firstTwentyCoins: [] = _coinsData.slice(0, 20);
-      setFirstTwentyCoinsData(_firstTwentyCoins);
-    };
-    if (firstTwentyCoinsData.length === 0) {
-      fetchFirstTwentyCoinsData();
+  const handleCurrencyChange = (key: TCurrencyKey) => {
+    if (key in SPECS_CURRENCIES) {
+      const _currency = SPECS_CURRENCIES[key];
+      setCurrency(_currency);
+      if (key !== currencyKey) {
+        setCurrencyKey(key);
+      }
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    const _selectedTickerOption = tickerOptions.find(
-      (option) => option.value === ticker
-    );
-    console.log(
-      '🚀  |  file: coinsContext.tsx:119  |  useEffect  |  ticker:',
-      ticker
-    );
-    if (_selectedTickerOption) setSelectedTickerOption(_selectedTickerOption);
-  }, [tickerOptions, ticker]);
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchPriceData = useCallback(
+    async (currentTicker: string) => {
       try {
-        if (reloading || fetchingData) {
-          setFetchingData(true);
-          const _tickerData = await fetchTickerData(ticker, currency);
-          console.log(
-            '🚀  |  file: coinsContext.tsx:135  |  fetchData  |  _tickerData:',
-            _tickerData
-          );
+        const _tickerData = await fetchTickerData(currentTicker);
 
-          setTickerData(() => _tickerData);
-          setPrice(() =>
-            _tickerData
-              ? formatCurrency(
-                  Math.round(
-                    _tickerData.quotes[CURRENCIES[currency]].price * 100
-                  ) / 100,
-                  CURRENCIES[currency]
-                )
-              : '0'
-          );
-        }
+        return _tickerData;
       } catch (error) {
         console.error('Failed to fetch ticker data:', error);
       } finally {
-        setTimeout(() => {
-          setReloading(false);
-          setFetchingData(false);
-        }, 750);
+        setRefreshing(false);
       }
+    },
+    [refreshing]
+  );
+
+  useEffect(() => {
+    const fetchAllTickerData = async () => {
+      const tickers = Object.values(SPECS_TICKERS) as Array<string>;
+
+      const results = await Promise.all(
+        tickers.map(async (key) => {
+          const data = await fetchPriceData(key);
+          return { key, data };
+        })
+      );
+
+      const newCombinedData: TCombinedTickerData = results.reduce(
+        (acc, { key, data }: { key: string; data: TTickerData }) => {
+          Object.keys(data.quotes).forEach((ck) => {
+            const currency = ck as TCurrencyValue;
+
+            data.quotes[currency].price =
+              makePrice(data.quotes[currency].price.toString(), currency as TCurrencyValue) || '0';
+          });
+          return {
+            ...acc,
+            [key]: data,
+          };
+        },
+        {} as TCombinedTickerData
+      );
+
+      setCombinedTickerData(newCombinedData);
     };
 
-    fetchData();
-  }, [reloading, fetchingData, tickerOptions]);
+    fetchAllTickerData();
+  }, [fetchPriceData]);
+
+  const makeTickerOptions = (optionsData: TTicker) => {
+    const _tickersOptions: Option[] = Object.entries(optionsData).map(([key, value]) => ({
+      label: `${value.split('-')[1].toUpperCase()} - ${value.split('-')[0].toUpperCase()}`,
+      value: key,
+    }));
+    _tickersOptions ? setTickerOptions(() => _tickersOptions) : [];
+    _tickersOptions ? setSelectedTickerOption(_tickersOptions[0]) : null;
+  };
+
+  useEffect(() => {
+    initApp();
+  }, []);
+
+  const initApp = () => {
+    makeTickerOptions(SPECS_TICKERS);
+  };
 
   return (
     <CoinsContext.Provider
       value={{
         currency,
-        setCurrency,
-        price,
-        setPrice,
         selectedTickerOption,
-        setSelectedTickerOption,
         ticker,
-        setTicker,
-        reloading,
-        setReloading,
+        tickerKey,
+        setTickerKey,
+        refreshing,
+        setRefreshing,
         tickerOptions,
-        setTickerOptions,
-        tickerData,
-        setTickerData,
-        firstTwentyCoinsData,
-        setFirstTwentyCoinsData,
-        fetchingData,
-        rotating,
-        setFetchingData,
         handleTickerSelect,
         handleCurrencyChange,
-        formatCurrency,
+        combinedTickerData,
       }}
     >
       {children}

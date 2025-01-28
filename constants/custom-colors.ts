@@ -1,0 +1,26 @@
+export const customColors = {
+  light: {
+    primary: '#261c39',
+    onPrimary: '#261c39',
+    secondary: '#03dac6',
+    background: '#ffffff',
+    onBackground: '#ffffff',
+    surface: '#ffffff',
+    error: '#B00020',
+    text: '#000000',
+    placeholder: '#aaa',
+    secondaryContainer: '#6ecf9c',
+  },
+  dark: {
+    primary: '#328ba3',
+    onPrimary: '#fff',
+    secondary: '#03dac6',
+    background: '#261c39',
+    onBackground: '#328ba3',
+    surface: '#121212',
+    error: '#cf6679',
+    text: '#ffffff',
+    placeholder: '#bbb',
+    secondaryContainer: '#6ecf9c',
+  },
+};
