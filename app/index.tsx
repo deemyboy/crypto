@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Dimensions, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Dimensions, View, TouchableOpacity, TextStyle, ViewStyle } from 'react-native';
 import { Text, ActivityIndicator, SegmentedButtons, useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,7 +8,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
 import { useCoins } from '@/contexts/coinsContext';
 import { TCurrencyKey, TTickerKey, TCurrencyValue } from '@/types/types';
@@ -32,7 +32,7 @@ export default function HomeScreen() {
 
   const theme = useTheme();
   const { colors } = theme;
-  const [selectedCurrency, setSelectedCurrency] = useState<TCurrencyKey | null>('usd');
+  const [selectedCurrency, setSelectedCurrency] = useState<TCurrencyKey | null>(DEFAULT.currencyKey);
   const currencies = Object.entries(SPECS_CURRENCIES) as [TCurrencyKey, TCurrencyValue][];
 
   const currencyButtons = currencies.map(([key, label]) => ({
@@ -77,7 +77,7 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    setValue('btc');
+    if (!value) setValue(DEFAULT.tickerKey);
   }, []);
 
   useEffect(() => {
@@ -134,19 +134,10 @@ export default function HomeScreen() {
               <TouchableOpacity onPress={() => setRefreshing(true)} style={styles.refresher}>
                 <Ionicons name="reload" size={32} color={colors.onPrimary} prop={{ ltr: false }} />
               </TouchableOpacity>
-              <View style={styles.price}>
+              <View style={styles.priceBox}>
                 {!refreshing && price ? (
                   <>
-                    <Text
-                      style={{
-                        fontFamily: 'Roboto_700Bold',
-                        color: colors.onPrimary,
-                        minWidth: 50,
-                      }}
-                      variant="displayMedium"
-                    >
-                      {price}
-                    </Text>
+                    <Text style={[styles.price, { color: colors.onPrimary }]}>{price}</Text>
                   </>
                 ) : (
                   <View style={{}}>
@@ -218,7 +209,21 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<{
+  screen: ViewStyle;
+  content: ViewStyle;
+  dropdown: ViewStyle;
+  dataBox: ViewStyle;
+  linearGradientDataBox: ViewStyle;
+  refresher: ViewStyle;
+  dateTime: TextStyle;
+  tickerLabel: TextStyle;
+  priceBox: ViewStyle;
+  price: TextStyle;
+  currencyButtons: ViewStyle;
+  trends: ViewStyle;
+  trendBox: TextStyle;
+}>({
   screen: {
     flex: 1,
     alignItems: 'center',
@@ -263,11 +268,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
   },
-  price: {
-    fontFamily: 'Roboto_500Medium',
+  priceBox: {
     position: 'absolute',
     bottom: 75,
     flexDirection: 'row',
+  },
+  price: {
+    fontFamily: 'Roboto_700Bold',
+    lineHeight: 48,
+    fontSize: 40,
   },
   currencyButtons: {
     marginTop: 16,

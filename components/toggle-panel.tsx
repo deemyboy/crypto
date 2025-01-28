@@ -1,24 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  ScrollView,
-} from 'react-native';
+import { TTogglePanelProps } from '@/types/types';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, ViewStyle, TextStyle, ScrollView } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
-interface TogglePanelProps {
-  trendsPanelOpen: boolean;
-  children?: React.ReactNode;
-}
-
-export const TogglePanel: React.FC<TogglePanelProps> = ({ trendsPanelOpen, children }) => {
+export const TogglePanel: React.FC<TTogglePanelProps> = ({ trendsPanelOpen, children }) => {
   const animatedHeight = useRef<Animated.Value>(new Animated.Value(0)).current;
 
   const { colors } = useTheme();
