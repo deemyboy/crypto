@@ -7,15 +7,13 @@ export const Header = () => {
   const { toggleTheme, isThemeDark } = usePreferences();
 
   return (
-    <Appbar.Header
-      theme={{
-        colors: {
-          primary: theme?.colors.surface,
-        },
-      }}
-    >
-      <Appbar.Content title="toggle dark mode" />
-      <Switch color={'red'} value={isThemeDark} onValueChange={toggleTheme} />
+    <Appbar.Header style={{ backgroundColor: theme.colors.background }}>
+      <Appbar.Content
+        title="Dark Mode"
+        style={{ backgroundColor: theme.colors.background }}
+        titleStyle={{ marginLeft: 200, color: theme.colors.primary }}
+      />
+      <Switch color={theme.colors.primary} value={isThemeDark} onValueChange={toggleTheme} />
     </Appbar.Header>
   );
 };

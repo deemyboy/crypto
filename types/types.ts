@@ -5,9 +5,8 @@ export type TTickerKey = keyof TTicker;
 export type TTickerValue = TTicker[TTickerKey];
 
 export type TCurrency = typeof SPECS_CURRENCIES;
-export type TCurrencyKey = keyof typeof SPECS_CURRENCIES;
-export type TCurrencyValue =
-  (typeof SPECS_CURRENCIES)[keyof typeof SPECS_CURRENCIES];
+export type TCurrencyKey = keyof TCurrency;
+export type TCurrencyValue = TCurrency[TCurrencyKey];
 
 export type TCoinData = {
   id: string;
@@ -19,52 +18,53 @@ export type TCoinData = {
   type: string;
 };
 
-export type TTickerData = {
+export type TTickerData = TTickerPriceData & {
   beta_value: number;
   first_data_at: string;
   id: string;
   last_updated: string;
   max_supply: number;
   name: string;
-  quotes: {
-    USD: {
-      ath_date: string;
-      ath_price: number;
-      market_cap: number;
-      market_cap_change_24h: number;
-      percent_change_12h: number;
-      percent_change_15m: number;
-      percent_change_1h: number;
-      percent_change_1y: number;
-      percent_change_24h: number;
-      percent_change_30d: number;
-      percent_change_30m: number;
-      percent_change_6h: number;
-      percent_change_7d: number;
-      percent_from_price_ath: number;
-      price: number;
-      volume_24h: number;
-      volume_24h_change_24h: number;
-    };
-  };
   rank: number;
   symbol: string;
   total_supply: number;
+};
+
+export type TQuotes = {
+  [key in TCurrencyValue]: {
+    ath_date: string;
+    ath_price: string;
+    market_cap: string;
+    market_cap_change_24h: string;
+    percent_change_12h: string;
+    percent_change_15m: string;
+    percent_change_1h: string;
+    percent_change_1y: string;
+    percent_change_24h: string;
+    percent_change_30d: string;
+    percent_change_30m: string;
+    percent_change_6h: string;
+    percent_change_7d: string;
+    percent_from_price_ath: string;
+    price: string;
+    volume_24h: string;
+    volume_24h_change_24h: string;
+  };
+};
+
+export type TTickerPriceData = {
+  quotes: TQuotes;
 };
 
 export type TSimplifiedTickerData = {
   name: string;
   symbol: string;
   last_updated: string;
-  quotes: {
-    USD: { price: string };
-    GBP: { price: string };
-  };
+  quotes: TQuotes;
 };
 
 export type TCombinedTickerData = {
-  'btc-bitcoin': TSimplifiedTickerData | null;
-  'eth-ethereum': TSimplifiedTickerData | null;
+  [key in TTickerValue]: TSimplifiedTickerData | null;
 };
 
 export type TPreferencesContext = {
@@ -79,8 +79,6 @@ export type Option = {
 
 export type TCoinsContext = {
   currency: TCurrencyValue;
-  setCurrencyKey: React.Dispatch<React.SetStateAction<TCurrencyKey>>;
-  price: string;
   selectedTickerOption: Option | null;
   ticker: TTickerValue;
   tickerKey: TTickerKey;
@@ -88,12 +86,22 @@ export type TCoinsContext = {
   refreshing: boolean;
   setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
   tickerOptions: Option[];
-  tickerData?: TSimplifiedTickerData | null;
-  fetchingData: boolean;
-  setFetchingData: React.Dispatch<React.SetStateAction<boolean>>;
   handleTickerSelect: (value: TTickerKey) => void;
   handleCurrencyChange: (value: TCurrencyKey) => void;
   combinedTickerData: TCombinedTickerData | null;
+};
+
+export type TTickerQuote = {
+  percent_change_15m: string;
+  percent_change_1h: string;
+  percent_change_6h: string;
+  percent_change_12h: string;
+  percent_change_24h: string;
+  percent_change_30m: string;
+  percent_change_30d: string;
+  percent_change_7d: string;
+  percent_change_1y: string;
+  price: string;
 };
 
 export type TPrices = {

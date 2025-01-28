@@ -1,213 +1,217 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, View, TouchableOpacity } from 'react-native';
-import {
-  Text,
-  ActivityIndicator,
-  SegmentedButtons,
-  useTheme,
-} from 'react-native-paper';
-import { Dropdown } from 'react-native-element-dropdown';
-
+import { Text, ActivityIndicator, SegmentedButtons, useTheme } from 'react-native-paper';
+import DropDownPicker from 'react-native-dropdown-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Feather from '@expo/vector-icons/Feather';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import moment from 'moment';
 
 import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
 import { useCoins } from '@/contexts/coinsContext';
-import { Header } from '@/components/Header';
-import { usePreferences } from '@/contexts/preferencesContext';
-import { TCurrency, TCurrencyKey, TTickerKey, Option } from '@/types/types';
+import { TCurrencyKey, TTickerKey, TCurrencyValue } from '@/types/types';
+import { useSharedValue, withSpring } from 'react-native-reanimated';
+import { TogglePanel } from '../components/toggle-panel';
+import { useTickerData } from '@/hooks/useTickerData';
+import TimeAgo from '../components/time-ago';
 
 export default function HomeScreen() {
   const {
     currency,
-    setCurrencyKey,
-    price,
     selectedTickerOption,
-    ticker,
-    tickerKey,
-    setTickerKey,
     refreshing,
     setRefreshing,
     tickerOptions,
-    tickerData,
-    fetchingData,
     handleTickerSelect,
     handleCurrencyChange,
-    combinedTickerData,
   } = useCoins();
 
-  // const refDropdown1 = useRef<DropdownRef>(null);
-  const [timeAgo, setTimeAgo] = useState('');
-  // const [currency, setCurrency] = useState<TCurrency>('usd');
-  // const [price, setPrice] = useState<string>('0');
+  const { timeAgo, percentChanges, price } = useTickerData();
 
   const theme = useTheme();
   const { colors } = theme;
+  const [selectedCurrency, setSelectedCurrency] = useState<TCurrencyKey | null>('usd');
+  const currencies = Object.entries(SPECS_CURRENCIES) as [TCurrencyKey, TCurrencyValue][];
 
-  const { isThemeDark } = usePreferences();
+  const currencyButtons = currencies.map(([key, label]) => ({
+    value: key,
+    label: label,
+    icon: selectedCurrency === key ? 'check' : '',
+    checkedColor: colors.onPrimary,
+    uncheckedColor: colors.primary,
+    checked: selectedCurrency === key,
+    onPress: () => setSelectedCurrency(key),
+    style: {
+      borderColor: colors.primary,
+      borderWidth: 2,
+    },
+  }));
 
-  const makeTimeAgo = (timestamp: string | number | Date): void => {
-    const date = moment(timestamp);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<string | null>(null);
+  const [items, setItems] = useState(tickerOptions);
+  const [trendsPanelOpen, setTrendsPanelOpen] = useState(false);
 
-    if (!date.isValid()) {
-      throw new Error('Invalid timestamp');
-    }
+  const height = useSharedValue(1);
 
-    setTimeAgo(date.fromNow());
+  const toggleTrendsPanel = () => {
+    setTrendsPanelOpen(!trendsPanelOpen);
+    height.value = withSpring(height.value + 50);
   };
-
-  useEffect(() => {
-    if (tickerData) makeTimeAgo(tickerData.last_updated);
-  }, [tickerData]);
-
   const chooseCurrency = (chosenCurrency: string | undefined) => {
     if (!chosenCurrency || !(chosenCurrency in SPECS_CURRENCIES)) {
-      return; // Ignore invalid or undefined values
+      return;
     }
 
-    // Cast the value to TCurrencyKey
-    setCurrencyKey(chosenCurrency as TCurrencyKey);
+    handleCurrencyChange(chosenCurrency as TCurrencyKey);
   };
 
   const chooseTicker = (value: string | undefined) => {
-    console.log('🚀  |  file: index.tsx:91  |  chooseTicker  |  value:', value);
     if (!value || !(value in SPECS_TICKERS)) {
-      return; // Ignore invalid or undefined values
+      return;
     }
 
-    // Cast the value to the appropriate type
     handleTickerSelect(value as TTickerKey);
   };
 
-  const [isFocus, setIsFocus] = useState(false);
+  useEffect(() => {
+    setValue('btc');
+  }, []);
 
-  const renderLabel = () => {
-    if (tickerKey || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-          Dropdown label
-        </Text>
-      );
+  useEffect(() => {
+    if (tickerOptions && tickerOptions.length > 0) {
+      setItems(tickerOptions);
     }
-    return null;
-  };
+  }, [tickerOptions]);
+  useEffect(() => {
+    chooseTicker(value!);
+  }, [value]);
 
   return (
     <>
-      <Header />
-      <View style={[styles.screen, {}]}>
-        <View style={styles.content}>
+      <View style={[styles.screen, { backgroundColor: colors.background }]}>
+        <View style={[styles.content, { backgroundColor: colors.background }]}>
           <View style={styles.dropdown}>
-            {console.log('104 Dropdown tickerKey:', tickerKey)}
-
-            {renderLabel()}
-            {tickerOptions && tickerOptions.length > 0 ? (
-              // <Dropdown
-              //   ref={refDropdown1}
-              //   placeholder={'Select Currency'}
-              //   options={tickerOptions}
-              //   value={tickerKey || ''}
-              //   onSelect={chooseTicker}
-              //   mode="outlined"
-              // />
-
-              <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={tickerOptions}
-                search
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? 'Select item' : '...'}
-                searchPlaceholder="Search..."
-                value={tickerKey}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={(item) => {
-                  console.log(
-                    '🚀  |  file: index.tsx:133  |  HomeScreen  |  item:',
-                    item
-                  );
-                  handleTickerSelect(item.value);
-                  setIsFocus(false);
-                }}
-              />
-            ) : (
-              <></>
-            )}
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              containerStyle={{}}
+              style={{
+                height: 50,
+                borderRadius: 40,
+                borderColor: colors.primary,
+                borderWidth: 2,
+                backgroundColor: colors.background,
+              }}
+              textStyle={{
+                paddingLeft: 10,
+                color: colors.primary,
+                fontFamily: 'Roboto_500Medium',
+              }}
+              //  @ts-ignore
+              tickIconStyle={{ tintColor: colors.primary }}
+              //  @ts-ignore
+              arrowIconStyle={{ tintColor: colors.primary }}
+            />
           </View>
 
-          <View style={styles.dataBox}>
+          <View style={[styles.dataBox, {}]}>
             <LinearGradient
               start={[0.4, 0.9]}
               end={[0.9, 0.4]}
               colors={['#fb7bb3', '#fb93a3', '#f9a19a']}
               style={styles.linearGradientDataBox}
             >
-              <Text
-                style={{
-                  fontFamily: 'Roboto_500Medium',
-                }}
-                variant="titleSmall"
-              >
+              <Text style={styles.tickerLabel} variant="titleSmall">
                 {selectedTickerOption?.label}
               </Text>
-              <TouchableOpacity
-                onPress={() => setRefreshing(true)}
-                style={styles.refresher}
-              >
-                <Ionicons
-                  name="reload"
-                  size={32}
-                  color={colors.onPrimary}
-                  prop={{ ltr: false }}
-                />
+              <TouchableOpacity onPress={() => setRefreshing(true)} style={styles.refresher}>
+                <Ionicons name="reload" size={32} color={colors.onPrimary} prop={{ ltr: false }} />
               </TouchableOpacity>
-              <View style={{ backgroundColor: 'pink' }}>
+              <View style={styles.price}>
                 {!refreshing && price ? (
-                  <Text
-                    style={{
-                      fontFamily: 'Roboto_700Bold',
-                      color: colors.onPrimary,
-                    }}
-                    variant="displaySmall"
-                  >
-                    {price}
-                  </Text>
+                  <>
+                    <Text
+                      style={{
+                        fontFamily: 'Roboto_700Bold',
+                        color: colors.onPrimary,
+                        minWidth: 50,
+                      }}
+                      variant="displayMedium"
+                    >
+                      {price}
+                    </Text>
+                  </>
                 ) : (
                   <View style={{}}>
-                    <ActivityIndicator
-                      animating={true}
-                      color={isThemeDark ? 'white' : 'black'}
-                    />
+                    <ActivityIndicator animating={true} color={colors.onPrimary} />
                   </View>
                 )}
               </View>
               <Text style={styles.dateTime} variant="bodySmall">
-                {timeAgo}
+                <TimeAgo timestamp={timeAgo!} />
               </Text>
+              <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel}>
+                <FontAwesome6
+                  name="angle-up"
+                  style={[{ position: 'relative', bottom: -80 }, trendsPanelOpen ? { opacity: 0 } : { opacity: 1 }]}
+                  size={30}
+                  color={colors.primary}
+                />
+              </TouchableOpacity>
+
+              <TogglePanel trendsPanelOpen={trendsPanelOpen}>
+                {Object.entries(percentChanges).map(([key, value]) => (
+                  <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel} key={key}>
+                    <View
+                      style={[
+                        +value! >= 0 ? { borderColor: colors.secondaryContainer } : { borderColor: colors.error },
+                        {
+                          borderColor: colors.primary,
+                          borderWidth: 2,
+                          marginHorizontal: 2,
+                          minWidth: 80,
+                          minHeight: 60,
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: 15,
+                          backgroundColor: colors.background,
+                          opacity: 0.8,
+                        },
+                      ]}
+                      key={key}
+                    >
+                      <Text style={[styles.trendBox, { color: colors.onPrimary }]}>{key}</Text>
+                      <Text
+                        style={[
+                          styles.trendBox,
+                          +value! >= 0 ? { color: colors.secondaryContainer } : { color: colors.error },
+                        ]}
+                      >
+                        {value}
+
+                        <Feather
+                          name="percent"
+                          size={12}
+                          color={+value! >= 0 ? colors.secondaryContainer : colors.error}
+                        />
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </TogglePanel>
             </LinearGradient>
           </View>
-          <SegmentedButtons
-            value={currency}
-            onValueChange={chooseCurrency}
-            buttons={[
-              {
-                value: 'gbp',
-                label: SPECS_CURRENCIES.gbp,
-              },
-              {
-                value: 'usd',
-                label: SPECS_CURRENCIES.usd,
-              },
-            ]}
-          />
+          <View style={[styles.currencyButtons, {}]}>
+            <SegmentedButtons value={currency} onValueChange={chooseCurrency} buttons={currencyButtons} style={{}} />
+          </View>
         </View>
       </View>
     </>
@@ -217,46 +221,31 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'orange',
-    // width: Dimensions.get('screen').width * 0.9,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: Dimensions.get('screen').width * 0.8,
-    backgroundColor: 'green',
   },
   dropdown: {
-    // flex: 1,
-    // justifyContent: 'center',
     width: Dimensions.get('screen').width * 0.8,
-    // height: Dimensions.get('screen').height * 0.2,
     marginBottom: 16,
-    backgroundColor: 'grey',
-    paddingVertical: 10,
   },
   dataBox: {
-    // flex: 1,
     width: Dimensions.get('screen').width * 0.8,
-    height: Dimensions.get('screen').height * 0.3,
+    height: Dimensions.get('screen').height * 0.25,
     borderRadius: 10,
-    padding: 16,
     alignItems: 'center',
-    // justifyContent: 'center',
-    marginVertical: 16,
-    backgroundColor: 'yellow',
   },
   linearGradientDataBox: {
-    flex: 1,
-    height: Dimensions.get('screen').height * 0.3,
-    width: '100%',
+    width: Dimensions.get('screen').width * 0.8,
+    borderRadius: 10,
+
+    height: Dimensions.get('screen').height * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
-    // padding: 20,
-    // borderRadius: 10,
   },
   refresher: {
     position: 'absolute',
@@ -266,12 +255,28 @@ const styles = StyleSheet.create({
   },
   dateTime: {
     fontFamily: 'Roboto_400Regular',
-    marginTop: 8, // Spacing for the dateTime text
+    position: 'absolute',
+    top: 15,
   },
-  label: {},
-  placeholderStyle: {},
-  selectedTextStyle: {},
-  inputSearchStyle: {},
-  iconStyle: {},
-  icon: {},
+  tickerLabel: {
+    fontFamily: 'Roboto_700Bold',
+    position: 'absolute',
+    top: 50,
+  },
+  price: {
+    fontFamily: 'Roboto_500Medium',
+    position: 'absolute',
+    bottom: 75,
+    flexDirection: 'row',
+  },
+  currencyButtons: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  trends: {
+    alignItems: 'center',
+  },
+  trendBox: {
+    fontFamily: 'Roboto_700Bold',
+  },
 });

@@ -1,21 +1,16 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 
 import { CoinsProvider } from '@/contexts/coinsContext';
-import {
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_700Bold,
-} from '@expo-google-fonts/roboto';
+import { Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
-import {
-  PreferencesProvider,
-  usePreferences,
-} from '@/contexts/preferencesContext';
+import { usePreferences } from '@/contexts/preferencesContext';
+import { Header } from '@/components/Header';
+import { customColors } from '@/constants/custom-colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,15 +26,15 @@ export default function RootLayout() {
   const baseTheme = isThemeDark ? MD3DarkTheme : MD3LightTheme;
 
   const Theme = {
-    ...baseTheme,
+    colors: {
+      ...baseTheme.colors,
+      ...(isThemeDark ? customColors.dark : customColors.light),
+    },
     fonts: {
       ...baseTheme.fonts,
       regular: { fontFamily: 'Roboto_400Regular', fontWeight: 'normal' },
       medium: { fontFamily: 'Roboto_500Medium', fontWeight: '500' },
       bold: { fontFamily: 'Roboto_700Bold', fontWeight: 'bold' },
-    },
-    colors: {
-      background: isThemeDark ? '#091251' : '#1328b4',
     },
   };
 
@@ -57,7 +52,13 @@ export default function RootLayout() {
     <PaperProvider theme={Theme}>
       <CoinsProvider>
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: true,
+              header: () => <Header />,
+            }}
+          />
         </Stack>
       </CoinsProvider>
     </PaperProvider>
