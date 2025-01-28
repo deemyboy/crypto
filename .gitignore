@@ -42,5 +42,5 @@ build*
 
 # eas build related files/folders
 .idea/
-.ios/
-.android/
+ios/
+android/
