@@ -127,8 +127,15 @@ export type TTogglePanelProps = {
   trendsPanelOpen: boolean;
   children?: React.ReactNode;
 };
-//  time-ago.tsx
+// time-ago.tsx
 export type TimeAgoProps = {
   timestamp: string | number | Date;
   interval?: number;
+};
+
+// trend-box.tsx
+export type TTrendBoxProps = {
+  trendKey: string;
+  trendValue: string | undefined;
+  toggleTrendsPanel: () => void;
 };

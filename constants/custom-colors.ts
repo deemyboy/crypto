@@ -1,10 +1,11 @@
 export const customColors = {
   light: {
     primary: '#261c39',
+    // primary: '#328ba3',
     onPrimary: '#261c39',
     secondary: '#03dac6',
     background: '#ffffff',
-    onBackground: '#ffffff',
+    onBackground: '#556a',
     surface: '#ffffff',
     error: '#B00020',
     text: '#000000',
