@@ -5,7 +5,7 @@ export const SPECS_CURRENCIES = {
   usd: 'USD',
   // easily extensible
   // need to verify these currencies are available for that ticker
-  // max 4 otherwise currency buttong breaks
+  // max 4 otherwise currency button breaks
   // eur: 'EUR',
   // aud: 'AUD',
 } as const;
