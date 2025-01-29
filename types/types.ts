@@ -126,16 +126,19 @@ export type TPrices = {
 export type TTogglePanelProps = {
   trendsPanelOpen: boolean;
   children?: React.ReactNode;
-};
-// time-ago.tsx
-export type TimeAgoProps = {
-  timestamp: string | number | Date;
-  interval?: number;
+  toggleTrendsPanel: () => void;
 };
 
 // trend-box.tsx
 export type TTrendBoxProps = {
+  trendsPanelOpen: boolean;
   trendKey: string;
   trendValue: string | undefined;
   toggleTrendsPanel: () => void;
+};
+
+// time-ago.tsx
+export type TimeAgoProps = {
+  timestamp: string | number | Date;
+  interval?: number;
 };

@@ -1,7 +1,6 @@
 export const customColors = {
   light: {
     primary: '#261c39',
-    // primary: '#328ba3',
     onPrimary: '#261c39',
     secondary: '#03dac6',
     background: '#ffffff',
@@ -11,6 +10,12 @@ export const customColors = {
     text: '#000000',
     placeholder: '#aaa',
     secondaryContainer: '#6ecf9c',
+    onSurface: '#ccc',
+    onSurfaceVariant: '#dee',
+    onSurfaceDisabled: '#eee',
+    tertiary: '#ffabd3',
+    tertiaryContainer: '#fea9a6',
+    onTertiaryContainer: '#ffc1aa',
   },
   dark: {
     primary: '#328ba3',
@@ -23,5 +28,11 @@ export const customColors = {
     text: '#ffffff',
     placeholder: '#bbb',
     secondaryContainer: '#6ecf9c',
+    onSurface: '#261c39',
+    onSurfaceVariant: '#22294f',
+    onSurfaceDisabled: '#1e3561',
+    tertiary: '#fb7bb3',
+    tertiaryContainer: '#fb93a3',
+    onTertiaryContainer: '#f9a19a',
   },
 };

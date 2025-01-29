@@ -1,47 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Dimensions, View, TextStyle, ViewStyle } from 'react-native';
-import { SegmentedButtons, useTheme } from 'react-native-paper';
+import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { DEFAULT, SPECS_TICKERS } from '@/constants/Api';
 
 import { useCoins } from '@/contexts/coinsContext';
-import { TCurrencyKey, TTickerKey, TCurrencyValue } from '@/types/types';
+import { TTickerKey } from '@/types/types';
 import { DataBox } from '@/components/data-box';
+import { LinearGradient } from 'expo-linear-gradient';
+import { CurrencySelector } from '@/components/currency-selector';
 
 export default function HomeScreen() {
-  const { currency, tickerOptions, handleTickerSelect, handleCurrencyChange } = useCoins();
+  const { tickerOptions, handleTickerSelect } = useCoins();
 
   const theme = useTheme();
   const { colors } = theme;
-  const [selectedCurrency, setSelectedCurrency] = useState<TCurrencyKey | null>(DEFAULT.currencyKey);
-  const currencies = Object.entries(SPECS_CURRENCIES) as [TCurrencyKey, TCurrencyValue][];
-
-  const currencyButtons = currencies.map(([key, label]) => ({
-    value: key,
-    label: label,
-    icon: selectedCurrency === key ? 'check' : '',
-    checkedColor: colors.onPrimary,
-    uncheckedColor: colors.onBackground,
-    checked: selectedCurrency === key,
-    onPress: () => setSelectedCurrency(key),
-    style: {
-      borderColor: colors.primary,
-      borderWidth: 2,
-    },
-  }));
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState(tickerOptions);
-
-  const chooseCurrency = (chosenCurrency: string | undefined) => {
-    if (!chosenCurrency || !(chosenCurrency in SPECS_CURRENCIES)) {
-      return;
-    }
-
-    handleCurrencyChange(chosenCurrency as TCurrencyKey);
-  };
 
   const chooseTicker = (value: string | undefined) => {
     if (!value || !(value in SPECS_TICKERS)) {
@@ -66,8 +44,13 @@ export default function HomeScreen() {
 
   return (
     <>
-      <View style={[styles.screen, { backgroundColor: colors.background }]}>
-        <View style={[styles.content, { backgroundColor: colors.background }]}>
+      <LinearGradient
+        start={[0.9, 0.4]}
+        end={[0.4, 0.9]}
+        colors={[colors.onSurface, colors.onSurfaceVariant, colors.onSurfaceDisabled]}
+        style={styles.gradient}
+      >
+        <View style={[styles.container, {}]}>
           <View style={styles.dropdownBox}>
             <DropDownPicker
               open={open}
@@ -81,7 +64,7 @@ export default function HomeScreen() {
                 styles.dropdownPicker,
                 {
                   borderColor: colors.primary,
-                  backgroundColor: colors.background,
+                  backgroundColor: 'transparent',
                 },
               ]}
               textStyle={{
@@ -98,30 +81,32 @@ export default function HomeScreen() {
           <View style={[styles.dataBox, {}]}>
             <DataBox />
           </View>
-          <View style={[styles.currencyButtonsBox, {}]}>
-            <SegmentedButtons value={currency} onValueChange={chooseCurrency} buttons={currencyButtons} style={{}} />
+          <View style={[styles.currencySelectorBox, {}]}>
+            <CurrencySelector />
           </View>
         </View>
-      </View>
+      </LinearGradient>
     </>
   );
 }
 
 const styles = StyleSheet.create<{
-  screen: ViewStyle;
-  content: ViewStyle;
+  gradient: ViewStyle;
+  container: ViewStyle;
   dropdownBox: ViewStyle;
   dropdownPicker: ViewStyle;
   dataBox: ViewStyle;
-  currencyButtonsBox: ViewStyle;
-  trends: ViewStyle;
-  trendBox: TextStyle;
+  currencySelectorBox: ViewStyle;
 }>({
-  screen: {
-    flex: 1,
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     alignItems: 'center',
   },
-  content: {
+  container: {
     width: Dimensions.get('screen').width * 0.8,
     flex: 1,
     justifyContent: 'center',
@@ -139,17 +124,9 @@ const styles = StyleSheet.create<{
   dataBox: {
     width: Dimensions.get('screen').width * 0.8,
     height: Dimensions.get('screen').height * 0.25,
-    borderRadius: 10,
-    alignItems: 'center',
   },
-  currencyButtonsBox: {
+  currencySelectorBox: {
     marginTop: 16,
     alignItems: 'center',
-  },
-  trends: {
-    alignItems: 'center',
-  },
-  trendBox: {
-    fontFamily: 'Roboto_700Bold',
   },
 });
