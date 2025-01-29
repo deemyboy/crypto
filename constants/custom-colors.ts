@@ -1,8 +1,8 @@
 export const CustomColors = {
   light: {
     primary: '#261c39',
-    onPrimary: '#fff',
-    secondary: '#03dac6',
+    onPrimary: '#261c39',
+    secondary: '#03fa96',
     background: '#ffffff',
     onBackground: '#556a',
     surface: '#ddd',
@@ -21,7 +21,7 @@ export const CustomColors = {
   dark: {
     primary: '#328ba3',
     onPrimary: '#fff',
-    secondary: '#03dac6',
+    secondary: '#03fa96',
     background: '#261c39',
     onBackground: '#328ba3',
     surface: '#261c39',
