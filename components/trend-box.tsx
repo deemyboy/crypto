@@ -8,6 +8,7 @@ import { TTrendBoxProps } from '@/types/types';
 export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel, isLast }) => {
   const theme = useTheme();
   const { colors } = theme;
+  const valueBasedColor = +value! >= 0 ? (+value! === 0 ? colors.onPrimary : colors.secondaryContainer) : colors.error;
 
   return (
     <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel} key={key}>
@@ -19,16 +20,15 @@ export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: 
 
             opacity: 0.8,
             marginRight: isLast ? 0 : 3,
-            borderColor: +value! >= 0 ? colors.secondaryContainer : colors.error,
-            // borderColor: colors.onBackground,
+            borderColor: valueBasedColor,
           },
         ]}
         key={key}
       >
         <Text style={[styles.trendText, { color: colors.onPrimary }]}>{key}</Text>
-        <Text style={[styles.trendText, +value! >= 0 ? { color: colors.secondaryContainer } : { color: colors.error }]}>
+        <Text style={[styles.trendText, { color: valueBasedColor }]}>
           {value}
-          <Feather name="percent" size={12} color={+value! >= 0 ? colors.secondaryContainer : colors.error} />
+          <Feather name="percent" size={12} color={valueBasedColor} />
         </Text>
       </View>
     </TouchableOpacity>
