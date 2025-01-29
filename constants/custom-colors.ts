@@ -1,4 +1,4 @@
-export const customColors = {
+export const CustomColors = {
   light: {
     primary: '#261c39',
     onPrimary: '#261c39',
