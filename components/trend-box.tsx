@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import { TTrendBoxProps } from '@/types/types';
 
-export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel }) => {
+export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel, isLast }) => {
   const theme = useTheme();
   const { colors } = theme;
 
@@ -14,11 +14,13 @@ export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: 
       <View
         style={[
           styles.trendBox,
-          +value! >= 0 ? { borderColor: colors.secondaryContainer } : { borderColor: colors.error },
           {
-            borderColor: colors.onBackground,
             backgroundColor: colors.background,
+
             opacity: 0.8,
+            marginRight: isLast ? 0 : 3,
+            borderColor: +value! >= 0 ? colors.secondaryContainer : colors.error,
+            // borderColor: colors.onBackground,
           },
         ]}
         key={key}
@@ -39,7 +41,6 @@ const styles = StyleSheet.create<{
 }>({
   trendBox: {
     borderWidth: 2,
-    marginHorizontal: 2,
     minWidth: 80,
     minHeight: 60,
     flexDirection: 'column',

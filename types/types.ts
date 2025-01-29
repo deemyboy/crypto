@@ -120,6 +120,16 @@ export type TPrices = {
   usd: string;
 };
 
+/****** hooks *******/
+
+// useTickerData
+
+export type Trend = {
+  key: string;
+  value: string;
+  isLast: boolean;
+};
+
 /****** components *******/
 
 // toggle-panel.tsx
@@ -135,6 +145,7 @@ export type TTrendBoxProps = {
   trendKey: string;
   trendValue: string | undefined;
   toggleTrendsPanel: () => void;
+  isLast: boolean;
 };
 
 // time-ago.tsx
