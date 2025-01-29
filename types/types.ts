@@ -90,6 +90,7 @@ export type Option = {
 
 export type TCoinsContext = {
   currency: TCurrencyValue;
+  currencyKey: TCurrencyKey;
   selectedTickerOption: Option | null;
   ticker: TTickerValue;
   tickerKey: TTickerKey;
