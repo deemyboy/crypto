@@ -13,6 +13,9 @@ export const customColors = {
     onSurface: '#ccc',
     onSurfaceVariant: '#dee',
     onSurfaceDisabled: '#eee',
+    tertiary: '#ffabd3',
+    tertiaryContainer: '#fea9a6',
+    onTertiaryContainer: '#ffc1aa',
   },
   dark: {
     primary: '#328ba3',
@@ -28,5 +31,8 @@ export const customColors = {
     onSurface: '#261c39',
     onSurfaceVariant: '#22294f',
     onSurfaceDisabled: '#1e3561',
+    tertiary: '#fb7bb3',
+    tertiaryContainer: '#fb93a3',
+    onTertiaryContainer: '#f9a19a',
   },
 };

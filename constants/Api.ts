@@ -3,7 +3,9 @@ import { TDefaults } from '@/types/types';
 export const SPECS_CURRENCIES = {
   gbp: 'GBP',
   usd: 'USD',
-  // easily extensible - need to verify these currencies are available for that ticker
+  // easily extensible
+  // need to verify these currencies are available for that ticker
+  // max 4 otherwise currency buttong breaks
   // eur: 'EUR',
   // aud: 'AUD',
 } as const;

@@ -31,7 +31,7 @@ export const DataBox: React.FC = () => {
     <LinearGradient
       start={[0.4, 0.9]}
       end={[0.9, 0.4]}
-      colors={['#fb7bb3', '#fb93a3', '#f9a19a']}
+      colors={[colors.tertiary, colors.tertiaryContainer, colors.onTertiaryContainer]}
       style={styles.container}
     >
       <Text style={[styles.tickerLabel, { color: colors.onPrimary }]} variant="titleSmall">
