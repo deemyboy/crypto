@@ -28,6 +28,8 @@ export const DataBox: React.FC = () => {
     height.value = withSpring(height.value + 50);
   };
 
+  const textColor = colors.onPrimary;
+
   return (
     <LinearGradient
       start={[0.4, 0.9]}
@@ -35,20 +37,20 @@ export const DataBox: React.FC = () => {
       colors={[colors.tertiary, colors.tertiaryContainer, colors.onTertiaryContainer]}
       style={styles.container}
     >
-      <Text style={[styles.tickerLabel, { color: colors.onPrimary }]} variant="titleSmall">
+      <Text style={[styles.tickerLabel, { color: textColor }]} variant="titleSmall">
         {selectedTickerOption?.label}
       </Text>
       <TouchableOpacity onPress={() => setRefreshing(true)} style={styles.refresher}>
-        <Ionicons name="reload" size={32} color={colors.onPrimary} prop={{ ltr: false }} />
+        <Ionicons name="reload" size={32} color={textColor} prop={{ ltr: false }} />
       </TouchableOpacity>
       <View style={styles.priceBox}>
         {!refreshing && price ? (
           <>
-            <Text style={[styles.priceText, { color: colors.onPrimary }]}>{price}</Text>
+            <Text style={[styles.priceText, { color: textColor }]}>{price}</Text>
           </>
         ) : (
           <View style={{}}>
-            <ActivityIndicator animating={true} color={colors.onPrimary} />
+            <ActivityIndicator animating={true} color={textColor} />
           </View>
         )}
       </View>

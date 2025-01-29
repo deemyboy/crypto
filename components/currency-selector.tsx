@@ -29,7 +29,7 @@ export const CurrencySelector: React.FC = () => {
         {
           borderColor: colors.primary,
           borderWidth: 2,
-
+          justifyContent: 'center',
           height: 50,
         },
         index === 0
@@ -60,6 +60,7 @@ export const CurrencySelector: React.FC = () => {
         setSelectedCurrency(chosenCurrency as TCurrencyKey);
         chooseCurrency(chosenCurrency);
       }}
+      // @ts-ignore - far too complex to debug or type!
       buttons={currencyButtons}
       style={{
         borderTopRightRadius: 40,

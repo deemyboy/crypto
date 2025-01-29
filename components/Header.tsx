@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { useTheme, Appbar, Switch } from 'react-native-paper';
 
 import { usePreferences } from '@/contexts/preferencesContext';
@@ -12,7 +11,7 @@ export const Header = () => {
     <Appbar.Header style={{ backgroundColor: theme.colors.surface }}>
       <Appbar.Content
         title="Dark Mode"
-        style={{ backgroundColor: theme.colors.surface }}
+        style={{ backgroundColor: 'transparent' }}
         titleStyle={[
           {
             alignSelf: 'flex-end',
@@ -20,8 +19,8 @@ export const Header = () => {
             fontFamily: 'Roboto_500Medium',
             position: 'relative',
             bottom: 2,
+            marginRight: 10,
           },
-          Platform.OS === 'ios' ? { marginRight: 10 } : { marginRight: 0 },
         ]}
       />
       <Switch color={theme.colors.primary} value={isThemeDark} onValueChange={toggleTheme} />

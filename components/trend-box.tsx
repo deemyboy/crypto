@@ -8,7 +8,7 @@ import { TTrendBoxProps } from '@/types/types';
 export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel, isLast }) => {
   const theme = useTheme();
   const { colors } = theme;
-  const valueBasedColor = +value! >= 0 ? (+value! === 0 ? colors.onPrimary : colors.secondaryContainer) : colors.error;
+  const valueBasedColor = +value! >= 0 ? (+value! === 0 ? colors.onPrimary : colors.secondary) : colors.error;
 
   return (
     <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel} key={key}>

@@ -110,6 +110,7 @@ const styles = StyleSheet.create<{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   dropdownBox: {
     width: Dimensions.get('screen').width * 0.8,
