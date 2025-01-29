@@ -9,7 +9,7 @@ import { Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-googl
 import { Header } from '@/components/Header';
 import { CoinsProvider } from '@/contexts/coinsContext';
 import { usePreferences } from '@/contexts/preferencesContext';
-import { customColors } from '@/constants/custom-colors';
+import { CustomColors } from '@/constants/custom-colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,7 +27,7 @@ export default function RootLayout() {
   const Theme = {
     colors: {
       ...baseTheme.colors,
-      ...(isThemeDark ? customColors.dark : customColors.light),
+      ...(isThemeDark ? CustomColors.dark : CustomColors.light),
     },
     fonts: {
       ...baseTheme.fonts,
