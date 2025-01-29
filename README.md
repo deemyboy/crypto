@@ -1,3 +1,3 @@
 basic crypto currency reading app
 
-![WhatsApp Image 2025-01-29 at 01 58 17](https://github.com/user-attachments/assets/13971e78-0603-48f1-a073-8773a3fad9e5)
+![WhatsApp Image 2025-01-29 at 02 03 02](https://github.com/user-attachments/assets/11ab6aae-1fde-41d0-bd2f-34ba411a048d)
