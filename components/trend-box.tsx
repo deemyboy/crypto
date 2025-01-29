@@ -1,7 +1,8 @@
 import React from 'react';
-import { useTheme, Text } from 'react-native-paper';
 import { TouchableOpacity, View, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { useTheme, Text } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
+
 import { TTrendBoxProps } from '@/types/types';
 
 export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel }) => {

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { useTheme, Text } from 'react-native-paper';
 import { TouchableOpacity, View, StyleSheet, TextStyle, ViewStyle, ActivityIndicator } from 'react-native';
+import { useTheme, Text } from 'react-native-paper';
+import { useSharedValue, withSpring } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { useCoins } from '@/contexts/coinsContext';
-import { useTickerData } from '@/hooks/useTickerData';
 import { LinearGradient } from 'expo-linear-gradient';
+
 import TimeAgo from './time-ago';
 import { TogglePanel } from './toggle-panel';
 import { TrendBox } from './trend-box';
-import { useSharedValue, withSpring } from 'react-native-reanimated';
+import { useTickerData } from '@/hooks/useTickerData';
+import { useCoins } from '@/contexts/coinsContext';
 
 export const DataBox: React.FC = () => {
   const theme = useTheme();

@@ -1,7 +1,8 @@
 import React from 'react';
-import { useTheme, Appbar, TouchableRipple, Switch } from 'react-native-paper';
-import { usePreferences } from '@/contexts/preferencesContext';
 import { Platform } from 'react-native';
+import { useTheme, Appbar, Switch } from 'react-native-paper';
+
+import { usePreferences } from '@/contexts/preferencesContext';
 
 export const Header = () => {
   const theme = useTheme();
