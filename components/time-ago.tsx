@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextStyle } from 'react-native';
-
-import moment from 'moment';
 import { Text, useTheme } from 'react-native-paper';
+import moment from 'moment';
+
 import { TimeAgoProps } from '@/types/types';
 
 const TimeAgo: React.FC<TimeAgoProps> = ({ timestamp, interval = 60000 }) => {
   const [timeAgo, setTimeAgo] = useState(moment(timestamp).fromNow());
   const theme = useTheme();
   const { colors } = theme;
+
   useEffect(() => {
     setTimeAgo(moment(timestamp).fromNow());
 

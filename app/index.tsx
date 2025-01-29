@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { DEFAULT, SPECS_TICKERS } from '@/constants/Api';
-
+import { DataBox } from '@/components/data-box';
+import { CurrencySelector } from '@/components/currency-selector';
 import { useCoins } from '@/contexts/coinsContext';
 import { TTickerKey } from '@/types/types';
-import { DataBox } from '@/components/data-box';
-import { LinearGradient } from 'expo-linear-gradient';
-import { CurrencySelector } from '@/components/currency-selector';
 
 export default function HomeScreen() {
   const { tickerOptions, handleTickerSelect } = useCoins();

@@ -1,8 +1,9 @@
-import { TTogglePanelProps } from '@/types/types';
-import { FontAwesome6 } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, ViewStyle, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { FontAwesome6 } from '@expo/vector-icons';
+
+import { TTogglePanelProps } from '@/types/types';
 
 export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, trendsPanelOpen, children }) => {
   const animatedHeight = useRef<Animated.Value>(new Animated.Value(0)).current;

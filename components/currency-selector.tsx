@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
+import { SegmentedButtons, useTheme } from 'react-native-paper';
+
 import { DEFAULT, SPECS_CURRENCIES } from '@/constants/Api';
 import { useCoins } from '@/contexts/coinsContext';
 import { TCurrencyKey, TCurrencyValue } from '@/types/types';
-import React, { useState } from 'react';
-import { SegmentedButtons, useTheme } from 'react-native-paper';
 
 export const CurrencySelector: React.FC = () => {
   const { currency, handleCurrencyChange } = useCoins();

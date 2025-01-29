@@ -1,15 +1,14 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
-
-import { CoinsProvider } from '@/contexts/coinsContext';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
-import { usePreferences } from '@/contexts/preferencesContext';
 import { Header } from '@/components/Header';
+import { CoinsProvider } from '@/contexts/coinsContext';
+import { usePreferences } from '@/contexts/preferencesContext';
 import { customColors } from '@/constants/custom-colors';
 
 SplashScreen.preventAutoHideAsync();
