@@ -9,10 +9,10 @@ export const Header = () => {
   const { toggleTheme, isThemeDark } = usePreferences();
 
   return (
-    <Appbar.Header style={{ backgroundColor: theme.colors.background }}>
+    <Appbar.Header style={{ backgroundColor: theme.colors.onSurface }}>
       <Appbar.Content
         title="Dark Mode"
-        style={{ backgroundColor: theme.colors.background }}
+        style={{ backgroundColor: theme.colors.onSurface }}
         titleStyle={[
           { alignSelf: 'flex-end', color: theme.colors.primary },
           Platform.OS === 'ios' ? { marginRight: 10 } : { marginRight: 0 },
