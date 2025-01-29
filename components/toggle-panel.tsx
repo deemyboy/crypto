@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle, ScrollView, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet, ViewStyle, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { FontAwesome6 } from '@expo/vector-icons';
 
@@ -13,6 +13,7 @@ export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, tr
 
   const theme = useTheme();
   const { colors } = theme;
+  const animatedOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
@@ -20,48 +21,66 @@ export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, tr
       duration: ANIMATION_DURATION,
       useNativeDriver: false,
     }).start();
+
+    if (trendsPanelOpen) {
+      Animated.timing(animatedOpacity, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setTimeout(() => {
+        Animated.timing(animatedOpacity, {
+          toValue: 1,
+          duration: 0,
+          useNativeDriver: true,
+        }).start();
+      }, ANIMATION_DURATION);
+    }
   }, [trendsPanelOpen]);
 
   return (
-    <>
-      <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel}>
-        <FontAwesome6
-          name="angle-up"
-          style={[{ position: 'relative', bottom: -80 }, trendsPanelOpen ? { opacity: 0 } : { opacity: 1 }]}
-          size={30}
-          color={colors.onBackground}
-        />
+    <View style={[styles.container, {}]}>
+      <TouchableOpacity style={[styles.openIcon, {}]} onPress={toggleTrendsPanel}>
+        <Animated.View style={{ opacity: animatedOpacity }}>
+          <FontAwesome6 name="angle-up" size={40} color={colors.onBackground} />
+        </Animated.View>
       </TouchableOpacity>
       <Animated.View style={[styles.panel, { height: animatedHeight }]}>
-        <ScrollView horizontal contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
           {children}
         </ScrollView>
       </Animated.View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create<{
+  container: ViewStyle;
+  openIcon: ViewStyle;
   panel: ViewStyle;
   scrollViewContent: ViewStyle;
 }>({
+  container: {
+    width: '100%',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  openIcon: {
+    position: 'relative',
+    bottom: -10,
+  },
   panel: {
-    marginTop: 20,
     overflow: 'hidden',
     justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
+    alignItems: 'flex-end',
     width: '100%',
-    backgroundColor: 'transparent',
     flexDirection: 'row',
-    paddingVertical: 5,
   },
   scrollViewContent: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    paddingHorizontal: 5,
   },
 });

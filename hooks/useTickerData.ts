@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import { TSimplifiedTickerData, TTickerQuote } from '../types/types';
+import { Trend, TSimplifiedTickerData, TTickerQuote } from '../types/types';
 
 export const useTickerData = () => {
   const { currency, ticker, combinedTickerData } = useCoins();
@@ -8,12 +8,12 @@ export const useTickerData = () => {
   const [tickerData, setTickerData] = useState<{
     quotes: TSimplifiedTickerData['quotes'] | undefined;
     timeAgo: string | undefined;
-    percentChanges: Record<string, string | undefined>;
+    trends: Trend[];
     price: string;
   }>({
     quotes: undefined,
     timeAgo: undefined,
-    percentChanges: {},
+    trends: [],
     price: '0',
   });
 
@@ -47,12 +47,18 @@ export const useTickerData = () => {
           });
         }
 
+        const trends = Object.entries(percentChanges).map(([key, value], index, array) => ({
+          key,
+          value: value || '0',
+          isLast: index === array.length - 1,
+        }));
+
         const price = componentQuotes[currency]?.price || '0';
 
         setTickerData({
           quotes: componentQuotes,
           timeAgo: timeAgoData,
-          percentChanges,
+          trends,
           price,
         });
       }

@@ -17,7 +17,7 @@ export const DataBox: React.FC = () => {
 
   const { selectedTickerOption, refreshing, setRefreshing } = useCoins();
 
-  const { timeAgo, percentChanges, price } = useTickerData();
+  const { timeAgo, trends, price } = useTickerData();
 
   const [trendsPanelOpen, setTrendsPanelOpen] = useState(false);
 
@@ -55,18 +55,20 @@ export const DataBox: React.FC = () => {
       <View style={styles.dateTimeBox}>
         <TimeAgo timestamp={timeAgo!} />
       </View>
-
-      <TogglePanel trendsPanelOpen={trendsPanelOpen} toggleTrendsPanel={toggleTrendsPanel}>
-        {Object.entries(percentChanges).map(([key, value]) => (
-          <TrendBox
-            key={key}
-            trendKey={key}
-            trendValue={value}
-            trendsPanelOpen={trendsPanelOpen}
-            toggleTrendsPanel={toggleTrendsPanel}
-          />
-        ))}
-      </TogglePanel>
+      <View style={styles.togglePanelBox}>
+        <TogglePanel trendsPanelOpen={trendsPanelOpen} toggleTrendsPanel={toggleTrendsPanel}>
+          {trends.map((trend) => (
+            <TrendBox
+              key={trend.key}
+              trendKey={trend.key}
+              trendValue={trend.value}
+              trendsPanelOpen={trendsPanelOpen}
+              toggleTrendsPanel={toggleTrendsPanel}
+              isLast={trend.isLast}
+            />
+          ))}
+        </TogglePanel>
+      </View>
     </LinearGradient>
   );
 };
@@ -78,6 +80,7 @@ const styles = StyleSheet.create<{
   tickerLabel: TextStyle;
   priceBox: ViewStyle;
   priceText: TextStyle;
+  togglePanelBox: ViewStyle;
 }>({
   container: {
     height: '100%',
@@ -110,5 +113,10 @@ const styles = StyleSheet.create<{
     fontFamily: 'Roboto_700Bold',
     lineHeight: 48,
     fontSize: 40,
+  },
+  togglePanelBox: {
+    position: 'absolute',
+    bottom: 5,
+    paddingHorizontal: 5,
   },
 });
