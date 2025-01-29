@@ -16,6 +16,7 @@ import {
 
 const CoinsContext = createContext<TCoinsContext>({
   currency: DEFAULT.currency,
+  currencyKey: DEFAULT.currencyKey,
   selectedTickerOption: null,
   ticker: DEFAULT.ticker,
   tickerKey: 'btc',
@@ -144,6 +145,7 @@ export const CoinsProvider = ({ children }: any) => {
     <CoinsContext.Provider
       value={{
         currency,
+        currencyKey,
         selectedTickerOption,
         ticker,
         tickerKey,

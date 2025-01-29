@@ -46,7 +46,7 @@ export default function HomeScreen() {
       <LinearGradient
         start={[0.9, 0.4]}
         end={[0.4, 0.9]}
-        colors={[colors.onSurface, colors.onSurfaceVariant, colors.onSurfaceDisabled]}
+        colors={[colors.surface, colors.onSurfaceVariant, colors.onSurfaceDisabled]}
         style={styles.gradient}
       >
         <View style={[styles.container, {}]}>
