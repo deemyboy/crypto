@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { LinearGradient } from 'expo-linear-gradient';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 import { DEFAULT, SPECS_TICKERS } from '@/constants/Api';
 import { DataBox } from '@/components/data-box';
@@ -75,6 +76,12 @@ export default function HomeScreen() {
               tickIconStyle={{ tintColor: colors.onBackground }}
               //  @ts-ignore
               arrowIconStyle={{ tintColor: colors.onBackground }}
+              ArrowUpIconComponent={() => (
+                <AntDesign name="caretup" size={16} style={{ left: -10 }} color={colors.onBackground} />
+              )}
+              ArrowDownIconComponent={() => (
+                <AntDesign name="caretdown" size={16} style={{ left: -10 }} color={colors.onBackground} />
+              )}
             />
           </View>
           <View style={[styles.dataBox, {}]}>

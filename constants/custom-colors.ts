@@ -14,9 +14,9 @@ export const CustomColors = {
     onSurface: '#888',
     onSurfaceVariant: '#dee',
     onSurfaceDisabled: '#eee',
-    tertiary: '#ffabd3',
-    tertiaryContainer: '#fea9a6',
-    onTertiaryContainer: '#ffc1aa',
+    tertiary: '#fb6aa2',
+    tertiaryContainer: '#eb8393',
+    onTertiaryContainer: '#e89089',
   },
   dark: {
     primary: '#328ba3',
