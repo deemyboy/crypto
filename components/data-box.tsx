@@ -77,8 +77,6 @@ const styles = StyleSheet.create<{
   tickerLabel: TextStyle;
   priceBox: ViewStyle;
   priceText: TextStyle;
-  trends: ViewStyle;
-  trendBox: TextStyle;
 }>({
   container: {
     height: '100%',
@@ -111,11 +109,5 @@ const styles = StyleSheet.create<{
     fontFamily: 'Roboto_700Bold',
     lineHeight: 48,
     fontSize: 40,
-  },
-  trends: {
-    alignItems: 'center',
-  },
-  trendBox: {
-    fontFamily: 'Roboto_700Bold',
   },
 });

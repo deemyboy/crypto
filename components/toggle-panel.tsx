@@ -1,7 +1,7 @@
 import { TTogglePanelProps } from '@/types/types';
 import { FontAwesome6 } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle, TextStyle, ScrollView, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet, ViewStyle, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, trendsPanelOpen, children }) => {
@@ -41,18 +41,9 @@ export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, tr
 };
 
 const styles = StyleSheet.create<{
-  container: ViewStyle;
   panel: ViewStyle;
-  panelText: TextStyle;
   scrollViewContent: ViewStyle;
 }>({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'orange',
-  },
   panel: {
     marginTop: 20,
     overflow: 'hidden',
@@ -64,10 +55,6 @@ const styles = StyleSheet.create<{
     backgroundColor: 'transparent',
     flexDirection: 'row',
     paddingVertical: 5,
-  },
-  panelText: {
-    padding: 20,
-    textAlign: 'center',
   },
   scrollViewContent: {
     flexDirection: 'row',

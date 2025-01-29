@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, StyleSheet, TextStyle, ViewStyle, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 
 import moment from 'moment';
 import { Text, useTheme } from 'react-native-paper';

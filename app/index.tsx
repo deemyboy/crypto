@@ -48,43 +48,41 @@ export default function HomeScreen() {
         start={[0.9, 0.4]}
         end={[0.4, 0.9]}
         colors={[colors.onSurface, colors.onSurfaceVariant, colors.onSurfaceDisabled]}
-        style={styles.linearGradient}
+        style={styles.gradient}
       >
-        <View style={[styles.screen, {}]}>
-          <View style={[styles.content, {}]}>
-            <View style={styles.dropdownBox}>
-              <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-                containerStyle={{}}
-                style={[
-                  styles.dropdownPicker,
-                  {
-                    borderColor: colors.primary,
-                    backgroundColor: 'transparent',
-                  },
-                ]}
-                textStyle={{
-                  paddingLeft: 10,
-                  color: colors.onBackground,
-                  fontFamily: 'Roboto_500Medium',
-                }}
-                //  @ts-ignore
-                tickIconStyle={{ tintColor: colors.onBackground }}
-                //  @ts-ignore
-                arrowIconStyle={{ tintColor: colors.onBackground }}
-              />
-            </View>
-            <View style={[styles.dataBox, {}]}>
-              <DataBox />
-            </View>
-            <View style={[styles.currencySelectorBox, {}]}>
-              <CurrencySelector />
-            </View>
+        <View style={[styles.container, {}]}>
+          <View style={styles.dropdownBox}>
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              containerStyle={{}}
+              style={[
+                styles.dropdownPicker,
+                {
+                  borderColor: colors.primary,
+                  backgroundColor: 'transparent',
+                },
+              ]}
+              textStyle={{
+                paddingLeft: 10,
+                color: colors.onBackground,
+                fontFamily: 'Roboto_500Medium',
+              }}
+              //  @ts-ignore
+              tickIconStyle={{ tintColor: colors.onBackground }}
+              //  @ts-ignore
+              arrowIconStyle={{ tintColor: colors.onBackground }}
+            />
+          </View>
+          <View style={[styles.dataBox, {}]}>
+            <DataBox />
+          </View>
+          <View style={[styles.currencySelectorBox, {}]}>
+            <CurrencySelector />
           </View>
         </View>
       </LinearGradient>
@@ -93,19 +91,22 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create<{
-  screen: ViewStyle;
-  content: ViewStyle;
+  gradient: ViewStyle;
+  container: ViewStyle;
   dropdownBox: ViewStyle;
   dropdownPicker: ViewStyle;
   dataBox: ViewStyle;
   currencySelectorBox: ViewStyle;
-  linearGradient: ViewStyle;
 }>({
-  screen: {
-    flex: 1,
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     alignItems: 'center',
   },
-  content: {
+  container: {
     width: Dimensions.get('screen').width * 0.8,
     flex: 1,
     justifyContent: 'center',
@@ -127,12 +128,5 @@ const styles = StyleSheet.create<{
   currencySelectorBox: {
     marginTop: 16,
     alignItems: 'center',
-  },
-  linearGradient: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
   },
 });
