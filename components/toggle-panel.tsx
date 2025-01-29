@@ -1,38 +1,37 @@
 import { TTogglePanelProps } from '@/types/types';
+import { FontAwesome6 } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle, TextStyle, ScrollView } from 'react-native';
+import { Animated, StyleSheet, ViewStyle, TextStyle, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-export const TogglePanel: React.FC<TTogglePanelProps> = ({ trendsPanelOpen, children }) => {
+export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, trendsPanelOpen, children }) => {
   const animatedHeight = useRef<Animated.Value>(new Animated.Value(0)).current;
+  const PANEL_END_HEIGHT = 70;
+  const PANEL_START_HEIGHT = 0;
+  const ANIMATION_DURATION = 250;
 
-  const { colors } = useTheme();
+  const theme = useTheme();
+  const { colors } = theme;
+
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: trendsPanelOpen ? 70 : 0,
-      duration: 300,
+      toValue: trendsPanelOpen ? PANEL_END_HEIGHT : PANEL_START_HEIGHT,
+      duration: ANIMATION_DURATION,
       useNativeDriver: false,
     }).start();
   }, [trendsPanelOpen]);
+
   return (
     <>
-      <Animated.View
-        style={[
-          styles.panel,
-          {
-            position: 'absolute',
-            bottom: 0,
-            height: animatedHeight,
-            width: '100%',
-            backgroundColor: 'transparent',
-            overflow: 'hidden',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            paddingVertical: 5,
-          },
-        ]}
-      >
+      <TouchableOpacity style={[{}]} onPress={toggleTrendsPanel}>
+        <FontAwesome6
+          name="angle-up"
+          style={[{ position: 'relative', bottom: -80 }, trendsPanelOpen ? { opacity: 0 } : { opacity: 1 }]}
+          size={30}
+          color={colors.onBackground}
+        />
+      </TouchableOpacity>
+      <Animated.View style={[styles.panel, { height: animatedHeight }]}>
         <ScrollView horizontal contentContainerStyle={styles.scrollViewContent}>
           {children}
         </ScrollView>
@@ -43,8 +42,6 @@ export const TogglePanel: React.FC<TTogglePanelProps> = ({ trendsPanelOpen, chil
 
 const styles = StyleSheet.create<{
   container: ViewStyle;
-  button: ViewStyle;
-  buttonText: TextStyle;
   panel: ViewStyle;
   panelText: TextStyle;
   scrollViewContent: ViewStyle;
@@ -56,21 +53,17 @@ const styles = StyleSheet.create<{
     alignItems: 'center',
     backgroundColor: 'orange',
   },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
   panel: {
     marginTop: 20,
-    backgroundColor: 'lightgray',
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    paddingVertical: 5,
   },
   panelText: {
     padding: 20,
