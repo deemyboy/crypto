@@ -4,6 +4,7 @@ import { SegmentedButtons, useTheme } from 'react-native-paper';
 import { DEFAULT, SPECS_CURRENCIES } from '@/constants/Api';
 import { useCoins } from '@/contexts/coinsContext';
 import { TCurrencyKey, TCurrencyValue } from '@/types/types';
+import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
 
 export const CurrencySelector: React.FC = () => {
   const { handleCurrencyChange } = useCoins();
@@ -32,15 +33,11 @@ export const CurrencySelector: React.FC = () => {
           justifyContent: 'center',
           height: 50,
         },
-        index === 0
-          ? {
-              borderTopLeftRadius: 40,
-              borderBottomLeftRadius: 40,
-            }
-          : {
-              borderTopRightRadius: 40,
-              borderBottomRightRadius: 40,
-            },
+        index === 0 // this setup allows the end corner radius to match regardless of the number of currencies
+          ? { borderTopLeftRadius: CUSTOM_CORNER_RADIUS, borderBottomLeftRadius: CUSTOM_CORNER_RADIUS }
+          : index === (currencies?.length ?? 0) - 1
+          ? { borderTopRightRadius: CUSTOM_CORNER_RADIUS, borderBottomRightRadius: CUSTOM_CORNER_RADIUS }
+          : {},
       ],
     };
   });
@@ -63,10 +60,10 @@ export const CurrencySelector: React.FC = () => {
       // @ts-ignore - far too complex to debug or type!
       buttons={currencyButtons}
       style={{
-        borderTopRightRadius: 40,
-        borderTopLeftRadius: 40,
-        borderBottomRightRadius: 40,
-        borderBottomLeftRadius: 40,
+        borderTopRightRadius: CUSTOM_CORNER_RADIUS,
+        borderTopLeftRadius: CUSTOM_CORNER_RADIUS,
+        borderBottomRightRadius: CUSTOM_CORNER_RADIUS,
+        borderBottomLeftRadius: CUSTOM_CORNER_RADIUS,
       }}
     />
   );

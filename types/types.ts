@@ -7,7 +7,7 @@ export type TDefaults = {
   tickerKey: TTickerKey;
   currency: TCurrencyValue;
   currencyKey: TCurrencyKey;
-  selectedTickers: Partial<TTickerMap>;
+  selectedTickers: Array<Record<TTickerKey, TTickerValue>>;
 };
 
 /****** CoinsContext *******/
