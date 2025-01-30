@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import { Trend, SimplifiedTickerDataType, TickerQuote } from '../types/types';
+import {
+  Trend,
+  SimplifiedTickerDataType,
+  TickerMap as Tickers,
+  TickerQuote,
+  TickerValue,
+  TickerKey,
+  CurrencyKey,
+  CurrencyValue,
+} from '../types/types';
+import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
 export const useTickerData = () => {
   const { coinState, combinedTickerData } = useCoins();
@@ -10,11 +20,15 @@ export const useTickerData = () => {
     timeAgo: string | undefined;
     trends: Trend[];
     price: string;
+    tickers: { key: TickerKey; value: TickerValue }[];
+    currencies: { key: CurrencyKey; value: CurrencyValue }[];
   }>({
     quotes: undefined,
     timeAgo: undefined,
     trends: [],
     price: '0',
+    tickers: [],
+    currencies: [],
   });
 
   useEffect(() => {
@@ -55,11 +69,23 @@ export const useTickerData = () => {
 
         const price = componentQuotes[coinState.currency]?.price || '0';
 
+        const tickers = Object.entries(SPECS_TICKERS).map(([key, value]) => ({
+          key: key as TickerKey,
+          value: value as TickerValue,
+        }));
+
+        const currencies = Object.entries(SPECS_CURRENCIES).map(([key, value]) => ({
+          key: key as CurrencyKey,
+          value: value as CurrencyValue,
+        }));
+
         setTickerData({
           quotes: componentQuotes,
           timeAgo: timeAgoData,
           trends,
           price,
+          tickers,
+          currencies,
         });
       }
     }
