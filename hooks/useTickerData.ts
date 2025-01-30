@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import {
-  Trend,
-  TSimplifiedTickerData,
-  TTickerMap as Tickers,
-  TTickerQuote,
-  TTickerKeyValue,
-  TTickerKey,
-  TCurrencyKey,
-  TCurrencyKeyValue,
-} from '../types/types';
-import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { Trend, TSimplifiedTickerData, TTickerQuote } from '../types/types';
 
 export const useTickerData = () => {
   const { currency, ticker, combinedTickerData } = useCoins();
@@ -20,15 +10,11 @@ export const useTickerData = () => {
     timeAgo: string | undefined;
     trends: Trend[];
     price: string;
-    tickers: TTickerKeyValue[];
-    currencies: TCurrencyKeyValue[];
   }>({
     quotes: undefined,
     timeAgo: undefined,
     trends: [],
     price: '0',
-    tickers: [],
-    currencies: [],
   });
 
   useEffect(() => {
@@ -67,14 +53,6 @@ export const useTickerData = () => {
           isLast: index === array.length - 1,
         }));
 
-        const tickers = Object.entries(SPECS_TICKERS).map(
-          ([key, value]) => ({ key: key as TTickerKey, value } as TTickerKeyValue)
-        );
-
-        const currencies = Object.entries(SPECS_CURRENCIES).map(
-          ([key, value]) => ({ key: key as TCurrencyKey, value } as TCurrencyKeyValue)
-        );
-
         const price = componentQuotes[currency]?.price || '0';
 
         setTickerData({
@@ -82,8 +60,6 @@ export const useTickerData = () => {
           timeAgo: timeAgoData,
           trends,
           price,
-          tickers,
-          currencies,
         });
       }
     }

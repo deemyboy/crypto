@@ -12,8 +12,6 @@ import {
   TTickerKey,
   TTickerValue,
   TTickerMap as TTickers,
-  TTickerKeyValue,
-  TCurrencyKeyValue,
 } from '@/types/types';
 
 const CoinsContext = createContext<TCoinsContext>({
@@ -29,10 +27,6 @@ const CoinsContext = createContext<TCoinsContext>({
   handleTickerSelect: () => {},
   handleCurrencyChange: () => {},
   combinedTickerData: null,
-  selectableTickers: [],
-  setSelectableTickers: () => {},
-  selectableCurrencies: [],
-  setSelectableCurrencies: () => {},
 });
 
 export const useCoins = () => {
@@ -50,9 +44,6 @@ export const CoinsProvider = ({ children }: any) => {
   const [ticker, setTicker] = useState<TTickerValue>(DEFAULT.ticker);
   const [tickerKey, setTickerKey] = useState<TTickerKey>(DEFAULT.tickerKey);
   const [tickerOptions, setTickerOptions] = useState<Option[]>([]);
-  console.log('🚀  |  file: coinsContext.tsx:53  |  CoinsProvider  |  tickerOptions:', tickerOptions);
-  const [selectableTickers, setSelectableTickers] = useState<TTickerKeyValue[]>([]);
-  const [selectableCurrencies, setSelectableCurrencies] = useState<TCurrencyKeyValue[]>([]);
 
   const formatCurrency = (amount: number, value: TCurrencyValue) => {
     return new Intl.NumberFormat('en-US', {
@@ -165,10 +156,6 @@ export const CoinsProvider = ({ children }: any) => {
         handleTickerSelect,
         handleCurrencyChange,
         combinedTickerData,
-        selectableTickers,
-        setSelectableTickers,
-        selectableCurrencies,
-        setSelectableCurrencies,
       }}
     >
       {children}
