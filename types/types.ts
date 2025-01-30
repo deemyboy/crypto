@@ -7,6 +7,7 @@ export type TDefaults = {
   tickerKey: TTickerKey;
   currency: TCurrencyValue;
   currencyKey: TCurrencyKey;
+  selectedTickers: Partial<TTickerMap>;
 };
 
 /****** CoinsContext *******/
@@ -14,10 +15,12 @@ export type TDefaults = {
 export type TTickerMap = typeof SPECS_TICKERS;
 export type TTickerKey = keyof TTickerMap;
 export type TTickerValue = TTickerMap[TTickerKey];
+export type TTickerKeyValue = { key: TTickerKey; value: TTickerValue };
 
 export type TCurrencyMap = typeof SPECS_CURRENCIES;
 export type TCurrencyKey = keyof TCurrencyMap; // "gbp" | "usd"
 export type TCurrencyValue = TCurrencyMap[TCurrencyKey]; // "GBP" | "USD"
+export type TCurrencyKeyValue = { key: TCurrencyKey; value: TCurrencyValue };
 
 export type TCoinData = {
   id: string;
@@ -101,6 +104,10 @@ export type TCoinsContext = {
   handleTickerSelect: (value: TTickerKey) => void;
   handleCurrencyChange: (value: TCurrencyKey) => void;
   combinedTickerData: TCombinedTickerData | null;
+  selectableTickers: TTickerKeyValue[];
+  setSelectableTickers: React.Dispatch<React.SetStateAction<TTickerKeyValue[]>>;
+  selectableCurrencies: TCurrencyKeyValue[];
+  setSelectableCurrencies: React.Dispatch<React.SetStateAction<TCurrencyKeyValue[]>>;
 };
 
 export type TTickerQuote = {
