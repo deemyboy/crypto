@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { fetchTickerData } from '@/api/axios';
+import { storeDataAsJson, getDataObject } from '@/storage/storage';
 
 import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import {
@@ -74,6 +75,7 @@ export const CoinsProvider = ({ children }: any) => {
       if (key !== currencyKey) {
         setCurrencyKey(key);
       }
+      saveSettings(); // Save updated settings
     }
   };
 
@@ -85,6 +87,8 @@ export const CoinsProvider = ({ children }: any) => {
     const _selectedTickerOption = tickerOptions.find((option) => option.value === newTickerKey);
 
     if (_selectedTickerOption) setSelectedTickerOption(_selectedTickerOption);
+
+    saveSettings(); // Save updated settings
   };
 
   const makePrice = (amount: string, currencyValue: TCurrencyValue) => {
@@ -133,13 +137,35 @@ export const CoinsProvider = ({ children }: any) => {
     fetchAllTickerData();
   }, [fetchPriceData]);
 
-  useEffect(() => {
-    initApp();
+  const loadPersistedSettings = useCallback(async () => {
+    const storedCurrency = await getDataObject(); // Get settings from AsyncStorage
+    if (storedCurrency) {
+      setCurrency(storedCurrency.currency || DEFAULT.currency);
+      setCurrencyKey(storedCurrency.currencyKey || DEFAULT.currencyKey);
+      setTicker(storedCurrency.ticker || DEFAULT.ticker);
+      setTickerKey(storedCurrency.tickerKey || DEFAULT.tickerKey);
+    } else {
+      setCurrency(DEFAULT.currency);
+      setCurrencyKey(DEFAULT.currencyKey);
+      setTicker(DEFAULT.ticker);
+      setTickerKey(DEFAULT.tickerKey);
+    }
   }, []);
 
-  const initApp = () => {
-    makeTickerOptions(SPECS_TICKERS);
+  const saveSettings = async () => {
+    const settings = {
+      currency,
+      currencyKey,
+      ticker,
+      tickerKey,
+    };
+    await storeDataAsJson(settings); // Store settings in AsyncStorage
   };
+
+  useEffect(() => {
+    loadPersistedSettings();
+    makeTickerOptions(SPECS_TICKERS); // Initialize ticker options
+  }, []);
 
   return (
     <CoinsContext.Provider
