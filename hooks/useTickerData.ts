@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import { Trend, TSimplifiedTickerData, TTickerQuote } from '../types/types';
+import { Trend, SimplifiedTickerDataType, TickerQuote } from '../types/types';
 
 export const useTickerData = () => {
-  const { currency, ticker, combinedTickerData } = useCoins();
+  const { coinState, combinedTickerData } = useCoins();
 
   const [tickerData, setTickerData] = useState<{
-    quotes: TSimplifiedTickerData['quotes'] | undefined;
+    quotes: SimplifiedTickerDataType['quotes'] | undefined;
     timeAgo: string | undefined;
     trends: Trend[];
     price: string;
@@ -19,17 +19,17 @@ export const useTickerData = () => {
 
   useEffect(() => {
     if (combinedTickerData) {
-      const componentData = combinedTickerData[ticker];
+      const componentData = combinedTickerData[coinState.ticker];
 
       if (componentData) {
         const { quotes: componentQuotes, last_updated: timeAgoData } = componentData;
 
         const percentChanges: Record<string, string | undefined> = {};
 
-        if (componentQuotes && componentQuotes[currency]) {
-          const currencyQuotes = componentQuotes[currency] as TTickerQuote;
+        if (componentQuotes && componentQuotes[coinState.currency]) {
+          const currencyQuotes = componentQuotes[coinState.currency] as TickerQuote;
 
-          const orderedKeys: (keyof TTickerQuote)[] = [
+          const orderedKeys: (keyof TickerQuote)[] = [
             'percent_change_15m',
             'percent_change_30m',
             'percent_change_1h',
@@ -53,7 +53,7 @@ export const useTickerData = () => {
           isLast: index === array.length - 1,
         }));
 
-        const price = componentQuotes[currency]?.price || '0';
+        const price = componentQuotes[coinState.currency]?.price || '0';
 
         setTickerData({
           quotes: componentQuotes,
@@ -63,7 +63,7 @@ export const useTickerData = () => {
         });
       }
     }
-  }, [combinedTickerData, ticker, currency]);
+  }, [combinedTickerData, coinState.ticker, coinState.currency]);
 
   return tickerData;
 };

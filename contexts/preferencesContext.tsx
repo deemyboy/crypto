@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { TPreferencesContext } from '@/types/types';
+import { PreferencesContextType } from '@/types/types';
 
-export const PreferencesContext = React.createContext<TPreferencesContext>({
+export const PreferencesContext = React.createContext<PreferencesContextType>({
   isThemeDark: false,
   toggleTheme: () => {},
 });
