@@ -3,9 +3,9 @@ import { Animated, StyleSheet, ViewStyle, ScrollView, TouchableOpacity, View } f
 import { useTheme } from 'react-native-paper';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-import { TTogglePanelProps } from '@/types/types';
+import { TogglePanelProps } from '@/types/types';
 
-export const TogglePanel: React.FC<TTogglePanelProps> = ({ toggleTrendsPanel, trendsPanelOpen, children }) => {
+export const TogglePanel: React.FC<TogglePanelProps> = ({ toggleTrendsPanel, trendsPanelOpen, children }) => {
   const animatedHeight = useRef<Animated.Value>(new Animated.Value(0)).current;
   const PANEL_END_HEIGHT = 70;
   const PANEL_START_HEIGHT = 0;

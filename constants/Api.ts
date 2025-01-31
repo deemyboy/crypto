@@ -1,4 +1,4 @@
-import { TDefaults } from '@/types/types';
+import { DefaultsType } from '@/types/types';
 
 export const SPECS_CURRENCIES = {
   gbp: 'GBP',
@@ -17,7 +17,7 @@ export const SPECS_TICKERS = {
   // xrp: 'xrp-xrp',
 } as const;
 
-export const DEFAULT: TDefaults = {
+export const DEFAULT: DefaultsType = {
   ticker: 'btc-bitcoin',
   tickerKey: 'btc',
   currency: 'USD',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -9,38 +9,14 @@ import { DEFAULT, SPECS_TICKERS } from '@/constants/Api';
 import { DataBox } from '@/components/data-box';
 import { CurrencySelector } from '@/components/currency-selector';
 import { useCoins } from '@/contexts/coinsContext';
-import { TTickerKey } from '@/types/types';
+import { TickerKey } from '@/types/types';
+import { TickerPicker } from '@/components/ticker-picker';
 
 export default function HomeScreen() {
-  const { tickerOptions, handleTickerSelect } = useCoins();
+  const { tickerOptions, handleTickerSelect, coinState } = useCoins();
 
   const theme = useTheme();
   const { colors } = theme;
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<string | null>(null);
-  const [items, setItems] = useState(tickerOptions);
-
-  const chooseTicker = (value: string | undefined) => {
-    if (!value || !(value in SPECS_TICKERS)) {
-      return;
-    }
-
-    handleTickerSelect(value as TTickerKey);
-  };
-
-  useEffect(() => {
-    if (!value) setValue(DEFAULT.tickerKey);
-  }, []);
-
-  useEffect(() => {
-    if (tickerOptions && tickerOptions.length > 0) {
-      setItems(tickerOptions);
-    }
-  }, [tickerOptions]);
-  useEffect(() => {
-    chooseTicker(value!);
-  }, [value]);
 
   return (
     <>
@@ -52,37 +28,15 @@ export default function HomeScreen() {
       >
         <View style={[styles.container, {}]}>
           <View style={styles.dropdownBox}>
-            <DropDownPicker
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-              containerStyle={{}}
-              style={[
-                styles.dropdownPicker,
-                {
-                  borderColor: colors.primary,
-                  backgroundColor: 'transparent',
-                },
-              ]}
-              textStyle={{
-                paddingLeft: 10,
-                color: colors.onBackground,
-                fontFamily: 'Roboto_500Medium',
-              }}
-              //  @ts-ignore
-              tickIconStyle={{ tintColor: colors.onBackground }}
-              //  @ts-ignore
-              arrowIconStyle={{ tintColor: colors.onBackground }}
-              ArrowUpIconComponent={() => (
-                <AntDesign name="caretup" size={16} style={{ left: -10 }} color={colors.onBackground} />
-              )}
-              ArrowDownIconComponent={() => (
-                <AntDesign name="caretdown" size={16} style={{ left: -10 }} color={colors.onBackground} />
-              )}
-            />
+            {tickerOptions ? (
+              <TickerPicker
+                tickerKey={coinState.tickerKey}
+                onTickerChange={handleTickerSelect}
+                options={tickerOptions}
+              />
+            ) : (
+              <></>
+            )}
           </View>
           <View style={[styles.dataBox, {}]}>
             <DataBox />

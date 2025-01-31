@@ -1,38 +1,21 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MMKVLoader } from 'react-native-mmkv-storage';
 
-export const storeData = async (value: string) => {
-  try {
-    await AsyncStorage.setItem('my-key', value);
-  } catch (e) {
-    // saving error
-  }
+export const MMKV = new MMKVLoader()
+  .withInstanceID('default') // Correct approach
+  .initialize();
+
+export const storeData = (value: string) => {
+  MMKV.setString('my-key', value);
 };
 
-export const storeDataAsJson = async (value: string) => {
-  try {
-    const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem('my-key', jsonValue);
-  } catch (e) {
-    // saving error
-  }
+export const storeDataAsJson = (value: object) => {
+  MMKV.setMap('my-key', value);
 };
 
-export const getDataProperty = async () => {
-  try {
-    const value = await AsyncStorage.getItem('my-key');
-    if (value !== null) {
-      // value previously stored
-    }
-  } catch (e) {
-    // error reading value
-  }
+export const getDataProperty = (): string | null => {
+  return MMKV.getString('my-key') ?? null;
 };
 
-export const getDataObject = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('my-key');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-  }
+export const getDataObject = (): object | null => {
+  return MMKV.getMap('my-key') ?? null;
 };

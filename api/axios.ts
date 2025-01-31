@@ -9,9 +9,9 @@ export const fetchTickerData = async (ticker: string): Promise<any> => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Axios error:', error.response?.data || error.message);
+      console.warn('Axios error:', error.response?.data || error.message);
     } else {
-      console.error('Unexpected error:', error);
+      console.warn('Unexpected error:', error);
     }
   }
 };

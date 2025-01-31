@@ -3,15 +3,15 @@ import { SegmentedButtons, useTheme } from 'react-native-paper';
 
 import { DEFAULT, SPECS_CURRENCIES } from '@/constants/Api';
 import { useCoins } from '@/contexts/coinsContext';
-import { TCurrencyKey, TCurrencyValue } from '@/types/types';
+import { CurrencyKey, CurrencyValue } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
 
 export const CurrencySelector: React.FC = () => {
-  const { handleCurrencyChange } = useCoins();
+  const { handleCurrencyChange, coinState } = useCoins();
   const theme = useTheme();
   const { colors } = theme;
-  const currencies = Object.entries(SPECS_CURRENCIES) as [TCurrencyKey, TCurrencyValue][];
-  const [selectedCurrency, setSelectedCurrency] = useState<TCurrencyKey | null>(DEFAULT.currencyKey);
+  const currencies = Object.entries(SPECS_CURRENCIES) as [CurrencyKey, CurrencyValue][];
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(coinState.currencyKey);
 
   const currencyButtons = currencies.map(([key, label], index) => {
     const isChecked = selectedCurrency === key;
@@ -47,14 +47,14 @@ export const CurrencySelector: React.FC = () => {
       return;
     }
 
-    handleCurrencyChange(chosenCurrency as TCurrencyKey);
+    handleCurrencyChange(chosenCurrency as CurrencyKey);
   };
 
   return (
     <SegmentedButtons
       value={selectedCurrency!}
       onValueChange={(chosenCurrency) => {
-        setSelectedCurrency(chosenCurrency as TCurrencyKey);
+        setSelectedCurrency(chosenCurrency as CurrencyKey);
         chooseCurrency(chosenCurrency);
       }}
       // @ts-ignore - far too complex to debug or type!

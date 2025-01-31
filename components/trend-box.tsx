@@ -3,9 +3,9 @@ import { TouchableOpacity, View, StyleSheet, TextStyle, ViewStyle } from 'react-
 import { useTheme, Text } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
 
-import { TTrendBoxProps } from '@/types/types';
+import { TrendBoxProps } from '@/types/types';
 
-export const TrendBox: React.FC<TTrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel, isLast }) => {
+export const TrendBox: React.FC<TrendBoxProps> = ({ trendKey: key, trendValue: value, toggleTrendsPanel, isLast }) => {
   const theme = useTheme();
   const { colors } = theme;
   const valueBasedColor = +value! >= 0 ? (+value! === 0 ? colors.onPrimary : colors.secondary) : colors.error;
