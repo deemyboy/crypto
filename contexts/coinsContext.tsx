@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { fetchTickerData } from '@/api/axios';
-import { MMKV } from '@/storage/storage';
 
+import { getStoredObject, storeObject } from '@/storage/storage';
 import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { debounce } from '@/utils/utils';
 import {
   CoinsContextType,
   Option,
@@ -12,11 +13,9 @@ import {
   CurrencyKey,
   CurrencyValue,
   TickerKey,
-  TickerValue,
   TickerMap as TTickers,
   CoinState,
 } from '@/types/types';
-import { debounce } from '@/utils/utils';
 
 const CoinsContext = createContext<CoinsContextType>({
   coinState: {
@@ -49,7 +48,7 @@ export const CoinsProvider = ({ children }: any) => {
 
   const isFirstRender = useRef(true);
 
-  const storedSettings = MMKV.getMap<Partial<CoinState>>('settings');
+  const storedSettings = getStoredObject('settings');
   const [coinState, setCoinState] = useState<CoinState>({
     currency: storedSettings?.currency || DEFAULT.currency,
     currencyKey: storedSettings?.currencyKey || DEFAULT.currencyKey,
@@ -84,7 +83,7 @@ export const CoinsProvider = ({ children }: any) => {
 
     setCoinState((prev) => ({
       ...prev,
-      currencyKey: newCurrencyKey, //
+      currencyKey: newCurrencyKey,
       currency: _currency,
     }));
   };
@@ -165,7 +164,7 @@ export const CoinsProvider = ({ children }: any) => {
   }, []);
 
   const loadPersistedSettings = () => {
-    const storedSettings = MMKV.getMap<Partial<CoinState>>('settings');
+    const storedSettings = getStoredObject('settings');
     if (storedSettings) {
       setCoinState((prev) => ({
         ...prev,
@@ -176,8 +175,8 @@ export const CoinsProvider = ({ children }: any) => {
 
   const saveSettings = () => {
     setCoinState((prev) => {
-      MMKV.setMap('settings', prev);
-      return prev; // Ensure we don’t modify state here
+      storeObject('settings', prev);
+      return prev;
     });
   };
 
