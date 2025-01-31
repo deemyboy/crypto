@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { MMKV } from '@/storage/storage';
 
-import { PreferencesContextType } from '@/types/types';
+import { getStoredValue, storeValue } from '@/storage/storage';
 import { debounce } from '../utils/utils';
+import { PreferencesContextType } from '@/types/types';
 
 export const PreferencesContext = React.createContext<PreferencesContextType>({
   isThemeDark: false,
@@ -17,7 +17,7 @@ export const PreferencesProvider = ({ children }: any) => {
   const [isThemeDark, setIsThemeDark] = useState(true);
 
   const loadPersistedThemeSetting = () => {
-    const storedIsThemeDark = MMKV.getString('isThemeDark');
+    const storedIsThemeDark = getStoredValue('isThemeDark');
 
     if (storedIsThemeDark) {
       storedIsThemeDark === 'true' ? setIsThemeDark(true) : setIsThemeDark(false);
@@ -36,7 +36,7 @@ export const PreferencesProvider = ({ children }: any) => {
   const saveisThemeDark = () => {
     setIsThemeDark((prev) => {
       const _isDark = prev ? 'true' : 'false';
-      MMKV.setString('isThemeDark', _isDark);
+      storeValue('isThemeDark', _isDark);
       return prev;
     });
   };
