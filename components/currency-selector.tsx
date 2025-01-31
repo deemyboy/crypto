@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SegmentedButtons, useTheme } from 'react-native-paper';
 
-import { DEFAULT, SPECS_CURRENCIES } from '@/constants/Api';
+import { SPECS_CURRENCIES } from '@/constants/Api';
 import { useCoins } from '@/contexts/coinsContext';
 import { CurrencyKey, CurrencyValue } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
