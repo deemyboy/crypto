@@ -16,6 +16,7 @@ import {
   TickerMap as TTickers,
   CoinState,
 } from '@/types/types';
+import { debounce } from '@/utils/utils';
 
 const CoinsContext = createContext<CoinsContextType>({
   coinState: {
@@ -178,14 +179,6 @@ export const CoinsProvider = ({ children }: any) => {
       MMKV.setMap('settings', prev);
       return prev; // Ensure we don’t modify state here
     });
-  };
-
-  const debounce = (func: Function, delay: number) => {
-    let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
   };
 
   const saveSettingsDebounced = useCallback(

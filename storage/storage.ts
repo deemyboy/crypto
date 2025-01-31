@@ -1,8 +1,6 @@
 import { MMKVLoader } from 'react-native-mmkv-storage';
 
-export const MMKV = new MMKVLoader()
-  .withInstanceID('default') // Correct approach
-  .initialize();
+export const MMKV = new MMKVLoader().withInstanceID('default').initialize();
 
 export const storeData = (value: string) => {
   MMKV.setString('my-key', value);
