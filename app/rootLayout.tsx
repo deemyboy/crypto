@@ -58,13 +58,6 @@ export default function RootLayout() {
               header: () => <Header />,
             }}
           />
-          <Stack.Screen
-            name="settings"
-            options={{
-              headerShown: true,
-              header: () => <Header />,
-            }}
-          />
         </Stack>
       </CoinsProvider>
     </PaperProvider>

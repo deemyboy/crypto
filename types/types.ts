@@ -2,27 +2,24 @@ import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 
 /****** api *******/
 
-export type TDefaults = {
-  ticker: TTickerValue;
-  tickerKey: TTickerKey;
-  currency: TCurrencyValue;
-  currencyKey: TCurrencyKey;
-  selectedTickers: Array<Record<TTickerKey, TTickerValue>>;
+export type DefaultsType = {
+  ticker: TickerValue;
+  tickerKey: TickerKey;
+  currency: CurrencyValue;
+  currencyKey: CurrencyKey;
 };
 
 /****** CoinsContext *******/
 
-export type TTickerMap = typeof SPECS_TICKERS;
-export type TTickerKey = keyof TTickerMap;
-export type TTickerValue = TTickerMap[TTickerKey];
-export type TTickerKeyValue = { key: TTickerKey; value: TTickerValue };
+export type TickerMap = typeof SPECS_TICKERS;
+export type TickerKey = keyof TickerMap;
+export type TickerValue = TickerMap[TickerKey];
 
 export type TCurrencyMap = typeof SPECS_CURRENCIES;
-export type TCurrencyKey = keyof TCurrencyMap; // "gbp" | "usd"
-export type TCurrencyValue = TCurrencyMap[TCurrencyKey]; // "GBP" | "USD"
-export type TCurrencyKeyValue = { key: TCurrencyKey; value: TCurrencyValue };
+export type CurrencyKey = keyof TCurrencyMap; // "gbp" | "usd"
+export type CurrencyValue = TCurrencyMap[CurrencyKey]; // "GBP" | "USD"
 
-export type TCoinData = {
+export type CoinDataType = {
   id: string;
   is_active: boolean;
   is_new: boolean;
@@ -32,7 +29,7 @@ export type TCoinData = {
   type: string;
 };
 
-export type TTickerData = TTickerPriceData & {
+export type TickerData = TickerPriceDataType & {
   beta_value: number;
   first_data_at: string;
   id: string;
@@ -44,8 +41,8 @@ export type TTickerData = TTickerPriceData & {
   total_supply: number;
 };
 
-export type TQuotes = {
-  [key in TCurrencyValue]: {
+export type Quotes = {
+  [key in CurrencyValue]: {
     ath_date: string;
     ath_price: string;
     market_cap: string;
@@ -66,22 +63,22 @@ export type TQuotes = {
   };
 };
 
-export type TTickerPriceData = {
-  quotes: TQuotes;
+export type TickerPriceDataType = {
+  quotes: Quotes;
 };
 
-export type TSimplifiedTickerData = {
+export type SimplifiedTickerDataType = {
   name: string;
   symbol: string;
   last_updated: string;
-  quotes: TQuotes;
+  quotes: Quotes;
 };
 
-export type TCombinedTickerData = {
-  [key in TTickerValue]: TSimplifiedTickerData | null;
+export type CombinedTickerDataType = {
+  [key in TickerValue]: SimplifiedTickerDataType | null;
 };
 
-export type TPreferencesContext = {
+export type PreferencesContextType = {
   isThemeDark: boolean;
   toggleTheme: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -91,26 +88,26 @@ export type Option = {
   value: string;
 };
 
-export type TCoinsContext = {
-  currency: TCurrencyValue;
-  currencyKey: TCurrencyKey;
+export type CoinState = {
+  currency: CurrencyValue;
+  currencyKey: CurrencyKey;
+  ticker: TickerValue;
+  tickerKey: TickerKey;
+};
+
+export type CoinsContextType = {
+  coinState: CoinState;
+  setCoinState: React.Dispatch<React.SetStateAction<CoinState>>;
   selectedTickerOption: Option | null;
-  ticker: TTickerValue;
-  tickerKey: TTickerKey;
-  setTickerKey: React.Dispatch<React.SetStateAction<TTickerKey>>;
   refreshing: boolean;
   setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
   tickerOptions: Option[];
-  handleTickerSelect: (value: TTickerKey) => void;
-  handleCurrencyChange: (value: TCurrencyKey) => void;
-  combinedTickerData: TCombinedTickerData | null;
-  selectableTickers: TTickerKeyValue[];
-  setSelectableTickers: React.Dispatch<React.SetStateAction<TTickerKeyValue[]>>;
-  selectableCurrencies: TCurrencyKeyValue[];
-  setSelectableCurrencies: React.Dispatch<React.SetStateAction<TCurrencyKeyValue[]>>;
+  handleTickerSelect: (value: TickerKey) => void;
+  handleCurrencyChange: (value: CurrencyKey) => void;
+  combinedTickerData: CombinedTickerDataType | null;
 };
 
-export type TTickerQuote = {
+export type TickerQuote = {
   percent_change_15m: string;
   percent_change_1h: string;
   percent_change_6h: string;
@@ -121,11 +118,6 @@ export type TTickerQuote = {
   percent_change_7d: string;
   percent_change_1y: string;
   price: string;
-};
-
-export type TPrices = {
-  gbp: string;
-  usd: string;
 };
 
 /****** hooks *******/
@@ -141,14 +133,14 @@ export type Trend = {
 /****** components *******/
 
 // toggle-panel.tsx
-export type TTogglePanelProps = {
+export type TogglePanelProps = {
   trendsPanelOpen: boolean;
   children?: React.ReactNode;
   toggleTrendsPanel: () => void;
 };
 
 // trend-box.tsx
-export type TTrendBoxProps = {
+export type TrendBoxProps = {
   trendsPanelOpen: boolean;
   trendKey: string;
   trendValue: string | undefined;
