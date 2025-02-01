@@ -9,7 +9,6 @@ export const Header = () => {
   const { toggleTheme, isThemeDark } = usePreferences();
   const router = useRouter();
   const pathName = usePathname();
-  console.log('🚀  |  file: Header.tsx:12  |  Header  |  pathName:', pathName);
 
   const isOnSettings = pathName === '/settings';
 

@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native';
-import { useTheme, Appbar, Switch, Text, Checkbox } from 'react-native-paper';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTheme, Text, Checkbox } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
 import { useCoins } from '@/contexts/coinsContext';
-import { DEFAULT, SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import { useTickerData } from '@/hooks/useTickerData';
-import { TrendBox } from '@/components/trend-box';
+import { CurrencyKey, TickerKey } from '@/types/types';
 
 const Settings = () => {
   const theme = useTheme();
@@ -16,20 +14,21 @@ const Settings = () => {
   const { tickerOptions } = useCoins();
   const { tickers, currencies } = useTickerData();
 
-  const { selectableTickers, setSelectableTickers, selectableCurrencies, setSelectableCurrencies } = useCoins();
-  console.log('🚀  |  file: settings.tsx:19  |  Settings  |  tickers:', tickers);
-  const [checked, setChecked] = useState(false);
-  const [tempSelectableTickers, setTempSelectableTickers] = useState(selectableTickers);
-  console.log('🚀  |  file: settings.tsx:23  |  Settings  |  tempSelectableTickers:', tempSelectableTickers);
-  const [tempSelectableCurrencies, setTempSelectableCurrencies] = useState(selectableCurrencies);
-  console.log('🚀  |  file: settings.tsx:25  |  Settings  |  tempSelectableCurrencies:', tempSelectableCurrencies);
+  const {
+    availableCurrencies,
+    availableTickers,
+    setAvailableTickers,
+    setAvailableCurrencies,
+    setSelectedCurrenciesForUI,
+    setSelectedTickersForUI,
+  } = useCoins();
 
   return (
     <>
       <LinearGradient
         start={[0.9, 0.4]}
         end={[0.4, 0.9]}
-        colors={[colors.surface, colors.onSurfaceVariant, colors.onSurfaceDisabled]}
+        colors={[colors.surface, colors.onSurfaceVariant]}
         style={styles.gradient}
       >
         <View style={styles.container}>
@@ -38,39 +37,60 @@ const Settings = () => {
           {/* Tickers Panel */}
           <View style={styles.tickersPanel}>
             <Text>Tickers</Text>
-            {tickers.map((ticker) => (
-              <View key={ticker.key} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                <Checkbox
-                  status={checked ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    setTempSelectableTickers((prev) =>
-                      prev.includes(ticker) ? prev.filter((t) => t !== ticker) : [...prev, ticker]
-                    );
-                  }}
-                  uncheckedColor={colors.onPrimary}
-                />
-                <Text style={{ color: colors.onPrimary, marginLeft: 5 }}>{ticker.value.toUpperCase()}</Text>
-              </View>
-            ))}
+            {Object.entries(SPECS_TICKERS).map(([tickerKey, tickerValue]) => {
+              const isChecked = availableTickers[tickerKey as TickerKey];
+              const selectedCount = Object.values(availableTickers).filter(Boolean).length;
+              const disabled = isChecked && selectedCount === 1;
+
+              return (
+                <View key={tickerKey} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                  <Checkbox
+                    status={isChecked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setAvailableTickers((prev) => ({
+                        ...prev,
+                        [tickerKey as TickerKey]: !isChecked,
+                      }));
+                    }}
+                    uncheckedColor={colors.onPrimary}
+                    disabled={disabled}
+                  />
+                  {/* @ts-ignore */}
+                  <Text style={{ color: disabled ? colors.checkboxDisabled : colors.onPrimary, marginLeft: 5 }}>
+                    {tickerValue.toUpperCase()}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
 
           {/* Currencies Panel */}
           <View style={styles.currenciesPanel}>
             <Text>Currencies</Text>
-            {currencies.map((currency) => (
-              <View key={currency.key} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                <Checkbox
-                  status={checked ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    setTempSelectableCurrencies((prev) =>
-                      prev.includes(currency) ? prev.filter((t) => t !== currency) : [...prev, currency]
-                    );
-                  }}
-                  uncheckedColor={colors.onPrimary}
-                />
-                <Text style={{ color: colors.onPrimary, marginLeft: 5 }}>{currency.value.toUpperCase()}</Text>
-              </View>
-            ))}
+            {Object.entries(SPECS_CURRENCIES).map(([currencyKey, currencyValue]) => {
+              const isChecked = availableCurrencies[currencyKey as CurrencyKey];
+              const selectedCount = Object.values(availableCurrencies).filter(Boolean).length;
+              const disabled = (isChecked && selectedCount === 2) || (!isChecked && selectedCount === 3);
+              return (
+                <View key={currencyKey} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                  <Checkbox
+                    status={isChecked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setAvailableCurrencies((prev) => ({
+                        ...prev,
+                        [currencyKey as CurrencyKey]: !isChecked,
+                      }));
+                    }}
+                    uncheckedColor={colors.onPrimary}
+                    disabled={disabled}
+                  />
+                  {/* @ts-ignore */}
+                  <Text style={{ color: disabled ? colors.checkboxDisabled : colors.onPrimary, marginLeft: 5 }}>
+                    {currencyValue.toUpperCase()}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
         </View>
       </LinearGradient>
@@ -138,27 +158,4 @@ const styles = StyleSheet.create<{
     borderColor: 'orange',
     borderWidth: 1,
   },
-
-  // tickersPanel: {
-  //   // width: Dimensions.get('screen').width * 0.8,
-  //   // flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: 'transparent',
-  //   flexDirection: 'column',
-  //   // flexWrap: 'wrap',
-  //   borderColor: 'pink',
-  //   borderWidth: 1,
-  // },
-  // currenciesPanel: {
-  //   // width: Dimensions.get('screen').width * 0.8,
-  //   // flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: 'transparent',
-  //   flexDirection: 'column',
-  //   // flexWrap: 'wrap',
-  //   borderColor: 'orange',
-  //   borderWidth: 1,
-  // },
 });

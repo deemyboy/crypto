@@ -7,10 +7,10 @@ import { CurrencyKey, CurrencyValue } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
 
 export const CurrencySelector: React.FC = () => {
-  const { handleCurrencyChange, coinState } = useCoins();
+  const { handleCurrencyChange, coinState, selectedCurrenciesForUI } = useCoins();
   const theme = useTheme();
   const { colors } = theme;
-  const currencies = Object.entries(SPECS_CURRENCIES) as [CurrencyKey, CurrencyValue][];
+  const currencies = Object.entries(selectedCurrenciesForUI) as [CurrencyKey, CurrencyValue][];
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(coinState.currencyKey);
 
   const currencyButtons = currencies.map(([key, label], index) => {
@@ -43,7 +43,7 @@ export const CurrencySelector: React.FC = () => {
   });
 
   const chooseCurrency = (chosenCurrency: string | undefined) => {
-    if (!chosenCurrency || !(chosenCurrency in SPECS_CURRENCIES)) {
+    if (!chosenCurrency || !(chosenCurrency in selectedCurrenciesForUI)) {
       return;
     }
 
