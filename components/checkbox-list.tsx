@@ -1,3 +1,4 @@
+import { usePreferences } from '@/contexts/preferencesContext';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Checkbox, useTheme } from 'react-native-paper';
@@ -23,9 +24,16 @@ export const CheckboxList = <T extends string>({
 }: CheckboxListProps<T>) => {
   const { colors } = useTheme();
   const selectedCount = Object.values(selectedItems).filter(Boolean).length;
+  const { isThemeDark } = usePreferences();
 
   return (
-    <View style={[styles.panel, { ...style }, { borderColor: colors.onPrimary, borderWidth: 2 }]}>
+    <View
+      style={[
+        styles.panel,
+        { ...style },
+        { borderColor: colors.onPrimary, borderWidth: 2, backgroundColor: isThemeDark ? '#0003' : '#0002' },
+      ]}
+    >
       <Text style={[styles.title, { fontFamily: 'Roboto_500Medium', marginVertical: 5, color: colors.onPrimary }]}>
         {title}
       </Text>
@@ -36,7 +44,7 @@ export const CheckboxList = <T extends string>({
           (isChecked && selectedCount === minSelection) || (!isChecked && selectedCount === maxSelection);
 
         return (
-          <View key={key} style={styles.checkboxContainer}>
+          <View key={key} style={[styles.checkboxContainer, {}]}>
             <Checkbox
               status={isChecked ? 'checked' : 'unchecked'}
               onPress={() => {
