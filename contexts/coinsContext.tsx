@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { fetchTickerData } from '@/api/axios';
+import { isEqualWith } from 'lodash';
 
 import { getStoredObject, storeObject } from '@/storage/storage';
 import {
@@ -20,8 +21,6 @@ import {
   CurrencyValue,
   TickerKey,
   CoinState,
-  CurrencyMap,
-  TickerMap,
   TickerValue,
 } from '@/types/types';
 
@@ -218,8 +217,9 @@ export const CoinsProvider = ({ children }: any) => {
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
+      console.log('🚀  |  file: coinsContext.tsx:220  |  handleAppStateChange  |,nextAppState:', nextAppState);
       if (nextAppState === 'inactive' || nextAppState === 'background') {
-        saveSettings();
+        saveSettingsDebounced();
       } else if (nextAppState === 'active') {
         loadPersistedSettings();
       }
@@ -234,7 +234,12 @@ export const CoinsProvider = ({ children }: any) => {
 
   const loadPersistedSettings = () => {
     const storedSettings = getStoredObject('settings');
-    if (storedSettings) {
+    // console.log('🚀  |  file: coinsContext.tsx:237  |  loadPersistedSettings  |  storedSettings:', storedSettings);
+    // console.log(
+    //   '🚀  |  file: coinsContext.tsx:238  |  loadPersistedSettings  |  isEqualWith(storedSettings, coinState):',
+    //   isEqualWith(storedSettings, coinState)
+    // );
+    if (storedSettings && !isEqualWith(storedSettings, coinState)) {
       setCoinState((prev) => ({
         ...prev,
         ...storedSettings,
@@ -243,10 +248,23 @@ export const CoinsProvider = ({ children }: any) => {
   };
 
   const saveSettings = () => {
-    setCoinState((prev) => {
-      storeObject('settings', prev);
-      return prev;
-    });
+    const storedSettings = getStoredObject('settings');
+    console.log('🚀  |  file: coinsContext.tsx:259  |  saveSettings  |:');
+    console.log(
+      '🚀  |  file: coinsContext.tsx:254  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
+      isEqualWith(storedSettings, coinState)
+    );
+    if (!isEqualWith(storedSettings, coinState)) {
+      console.log(
+        '🚀  |  file: coinsContext.tsx:259  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
+        isEqualWith(storedSettings, coinState)
+      );
+      setCoinState((prev) => {
+        console.log('🚀  |  file: coinsContext.tsx:263  |  setCoinState  |  prev:', prev, 'coinState', coinState);
+        storeObject('settings', prev);
+        return prev;
+      });
+    }
   };
 
   const saveSettingsDebounced = useCallback(

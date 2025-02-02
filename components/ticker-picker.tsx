@@ -55,6 +55,7 @@ export const TickerPicker = ({ tickerKey, onTickerChange, options }: TickerPicke
       setValue(options.length > 0 ? options[0].value : null);
     }
   }, [options]);
+
   return (
     <DropDownPicker
       open={open}
