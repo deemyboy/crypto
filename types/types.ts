@@ -7,6 +7,7 @@ export type DefaultsType = {
   tickerKey: TickerKey;
   currency: CurrencyValue;
   currencyKey: CurrencyKey;
+  selectedTickers: Partial<TickerMap>[];
 };
 
 /****** CoinsContext *******/
@@ -15,9 +16,9 @@ export type TickerMap = typeof SPECS_TICKERS;
 export type TickerKey = keyof TickerMap;
 export type TickerValue = TickerMap[TickerKey];
 
-export type TCurrencyMap = typeof SPECS_CURRENCIES;
-export type CurrencyKey = keyof TCurrencyMap; // "gbp" | "usd"
-export type CurrencyValue = TCurrencyMap[CurrencyKey]; // "GBP" | "USD"
+export type CurrencyMap = typeof SPECS_CURRENCIES;
+export type CurrencyKey = keyof CurrencyMap; // "gbp" | "usd"
+export type CurrencyValue = CurrencyMap[CurrencyKey]; // "GBP" | "USD"
 
 export type CoinDataType = {
   id: string;
@@ -105,6 +106,14 @@ export type CoinsContextType = {
   handleTickerSelect: (value: TickerKey) => void;
   handleCurrencyChange: (value: CurrencyKey) => void;
   combinedTickerData: CombinedTickerDataType | null;
+  availableTickers: Record<TickerKey, boolean>;
+  setAvailableTickers: React.Dispatch<React.SetStateAction<Record<TickerKey, boolean>>>;
+  availableCurrencies: Record<CurrencyKey, boolean>;
+  setAvailableCurrencies: React.Dispatch<React.SetStateAction<Record<CurrencyKey, boolean>>>;
+  selectedCurrenciesForUI: Partial<Record<CurrencyKey, CurrencyValue>>;
+  setSelectedCurrenciesForUI: React.Dispatch<React.SetStateAction<Partial<Record<CurrencyKey, CurrencyValue>>>>;
+  selectedTickersForUI: Partial<Record<TickerKey, TickerValue>>;
+  setSelectedTickersForUI: React.Dispatch<React.SetStateAction<Partial<Record<TickerKey, TickerValue>>>>;
 };
 
 export type TickerQuote = {

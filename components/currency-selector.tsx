@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SegmentedButtons, useTheme } from 'react-native-paper';
 
-import { DEFAULT, SPECS_CURRENCIES } from '@/constants/Api';
 import { useCoins } from '@/contexts/coinsContext';
 import { CurrencyKey, CurrencyValue } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
 
 export const CurrencySelector: React.FC = () => {
-  const { handleCurrencyChange, coinState } = useCoins();
+  const { handleCurrencyChange, selectedCurrenciesForUI } = useCoins();
   const theme = useTheme();
   const { colors } = theme;
-  const currencies = Object.entries(SPECS_CURRENCIES) as [CurrencyKey, CurrencyValue][];
-  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(coinState.currencyKey);
+  const currencies = Object.entries(selectedCurrenciesForUI) as [CurrencyKey, CurrencyValue][];
+
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(
+    currencies.length > 0 ? currencies[0][0] : null
+  );
+
+  useEffect(() => {
+    if (!selectedCurrency || !selectedCurrenciesForUI[selectedCurrency]) {
+      const firstAvailableCurrency = currencies.length > 0 ? currencies[0][0] : null;
+      setSelectedCurrency(firstAvailableCurrency);
+
+      if (firstAvailableCurrency) {
+        handleCurrencyChange(firstAvailableCurrency);
+      }
+    }
+  }, [selectedCurrenciesForUI]);
 
   const currencyButtons = currencies.map(([key, label], index) => {
     const isChecked = selectedCurrency === key;
@@ -22,9 +35,8 @@ export const CurrencySelector: React.FC = () => {
       icon: isChecked ? 'check' : '',
       checked: isChecked,
       onPress: () => {
-        setSelectedCurrency(() => {
-          return key;
-        });
+        setSelectedCurrency(key);
+        handleCurrencyChange(key);
       },
       style: [
         {
@@ -42,20 +54,12 @@ export const CurrencySelector: React.FC = () => {
     };
   });
 
-  const chooseCurrency = (chosenCurrency: string | undefined) => {
-    if (!chosenCurrency || !(chosenCurrency in SPECS_CURRENCIES)) {
-      return;
-    }
-
-    handleCurrencyChange(chosenCurrency as CurrencyKey);
-  };
-
   return (
     <SegmentedButtons
       value={selectedCurrency!}
       onValueChange={(chosenCurrency) => {
         setSelectedCurrency(chosenCurrency as CurrencyKey);
-        chooseCurrency(chosenCurrency);
+        handleCurrencyChange(chosenCurrency as CurrencyKey);
       }}
       // @ts-ignore - far too complex to debug or type!
       buttons={currencyButtons}
