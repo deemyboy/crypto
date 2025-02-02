@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme, Appbar, Switch } from 'react-native-paper';
 import { usePathname, useRouter } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { usePreferences } from '@/contexts/preferencesContext';
 
 export const Header = () => {

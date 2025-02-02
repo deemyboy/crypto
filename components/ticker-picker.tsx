@@ -50,6 +50,11 @@ export const TickerPicker = ({ tickerKey, onTickerChange, options }: TickerPicke
     if (!value) setValue(tickerKey);
   }, []);
 
+  useEffect(() => {
+    if (!options.some((option) => option.value === value)) {
+      setValue(options.length > 0 ? options[0].value : null);
+    }
+  }, [options]);
   return (
     <DropDownPicker
       open={open}
