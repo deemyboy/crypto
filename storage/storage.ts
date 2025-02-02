@@ -1,20 +1,21 @@
 import { CoinState } from '@/types/types';
-import { MMKVLoader } from 'react-native-mmkv-storage';
+import { MMKV } from 'react-native-mmkv';
 
-export const MMKV = new MMKVLoader().withInstanceID('default').initialize();
+const storage = new MMKV();
 
 export const storeValue = (key: string, value: string) => {
-  MMKV.setString(key, value);
+  storage.set(key, value);
 };
 
 export const storeObject = (key: string, value: object) => {
-  MMKV.setMap(key, value);
+  storage.set(key, JSON.stringify(value));
 };
 
 export const getStoredValue = (key: string): string | null => {
-  return MMKV.getString(key) ?? null;
+  return storage.getString(key) ?? null;
 };
 
 export const getStoredObject = (key: string): Partial<CoinState> | null => {
-  return MMKV.getMap(key) ?? null;
+  const json = storage.getString(key);
+  return json ? JSON.parse(json) : null;
 };
