@@ -1,0 +1,110 @@
+[
+  {
+    "data": {
+      "beta_value": 0.906056,
+      "first_data_at": "2010-07-17T00:00:00Z",
+      "id": "btc-bitcoin",
+      "last_updated": "2025-02-03T19:22:27Z",
+      "max_supply": 21000000,
+      "name": "Bitcoin",
+      "quotes": {
+        "GBP": {
+          "ath_date": "2025-01-20T07:11:03Z",
+          "ath_price": 87975.43043344414,
+          "market_cap": 1612303092228.9775,
+          "market_cap_change_24h": 1.77,
+          "percent_change_12h": 6.82,
+          "percent_change_15m": 0.61,
+          "percent_change_1h": 1.3,
+          "percent_change_1y": 139.03,
+          "percent_change_24h": 1.76,
+          "percent_change_30d": 2.47,
+          "percent_change_30m": 0.73,
+          "percent_change_6h": 6.2,
+          "percent_change_7d": 1.6,
+          "percent_from_price_ath": -7.72,
+          "price": 81350.14093227088,
+          "volume_24h": 88755164195.24652,
+          "volume_24h_change_24h": 108.59
+        },
+        "USD": {
+          "ath_date": "2025-01-20T07:11:03Z",
+          "ath_price": 109021.48210276755,
+          "market_cap": 1998008669553,
+          "market_cap_change_24h": 2.52,
+          "percent_change_12h": 6.82,
+          "percent_change_15m": 0.61,
+          "percent_change_1h": 1.3,
+          "percent_change_1y": 134.48,
+          "percent_change_24h": 2.51,
+          "percent_change_30d": 2.22,
+          "percent_change_30m": 0.73,
+          "percent_change_6h": 6.2,
+          "percent_change_7d": 0.76,
+          "percent_from_price_ath": -7.72,
+          "price": 100811.24798150055,
+          "volume_24h": 109987748819.94572,
+          "volume_24h_change_24h": 110.12
+        }
+      },
+      "rank": 1,
+      "symbol": "BTC",
+      "total_supply": 19819303
+    },
+    "key": "btc-bitcoin"
+  },
+  {
+    "data": {
+      "beta_value": 1.15085,
+      "first_data_at": "2015-08-07T00:00:00Z",
+      "id": "eth-ethereum",
+      "last_updated": "2025-02-03T19:21:27Z",
+      "max_supply": 0,
+      "name": "Ethereum",
+      "quotes": {
+        "GBP": {
+          "ath_date": "2025-01-20T07:11:03Z",
+          "ath_price": 87975.43043344414,
+          "market_cap": 1612303092228.9775,
+          "market_cap_change_24h": 1.77,
+          "percent_change_12h": 6.82,
+          "percent_change_15m": 0.61,
+          "percent_change_1h": 1.3,
+          "percent_change_1y": 139.03,
+          "percent_change_24h": 1.76,
+          "percent_change_30d": 2.47,
+          "percent_change_30m": 0.73,
+          "percent_change_6h": 6.2,
+          "percent_change_7d": 1.6,
+          "percent_from_price_ath": -7.72,
+          "price": 81350.14093227088,
+          "volume_24h": 88755164195.24652,
+          "volume_24h_change_24h": 108.59
+        },
+        "USD": {
+          "ath_date": "2025-01-20T07:11:03Z",
+          "ath_price": 109021.48210276755,
+          "market_cap": 1998008669553,
+          "market_cap_change_24h": 2.52,
+          "percent_change_12h": 6.82,
+          "percent_change_15m": 0.61,
+          "percent_change_1h": 1.3,
+          "percent_change_1y": 134.48,
+          "percent_change_24h": 2.51,
+          "percent_change_30d": 2.22,
+          "percent_change_30m": 0.73,
+          "percent_change_6h": 6.2,
+          "percent_change_7d": 0.76,
+          "percent_from_price_ath": -7.72,
+          "price": 100811.24798150055,
+          "volume_24h": 109987748819.94572,
+          "volume_24h_change_24h": 110.12
+        }
+      },
+      "rank": 2,
+      "symbol": "ETH",
+      "total_supply": 120232214
+    },
+    "key": "eth-ethereum"
+  }
+]

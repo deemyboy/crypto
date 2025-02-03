@@ -1,5 +1,6 @@
 import { TICKERS_DATA_END_POINT } from '@/constants/Api';
 import axios from 'axios';
+import fakeData from '@/dummy/fake-data.json';
 
 export const fetchTickerData = async (ticker: string, currencies: string[]): Promise<any> => {
   const quotesParam = currencies.join(',');
@@ -10,10 +11,15 @@ export const fetchTickerData = async (ticker: string, currencies: string[]): Pro
     });
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.warn('Axios error:', error.response?.data || error.message);
+    console.warn('fetchData error', error);
+
+    const fallback = fakeData.find((item) => item.key === ticker);
+
+    if (fallback) {
+      return fallback.data;
     } else {
-      console.warn('Unexpected error:', error);
+      console.warn(`No fake data available for ${ticker}`);
+      return null;
     }
   }
 };
