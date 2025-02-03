@@ -37,9 +37,7 @@ const getDynamicAvailableState = <T extends Record<string, boolean>>(
 
 const CoinsContext = createContext<CoinsContextType>({
   coinState: {
-    currency: DEFAULT.currency,
     currencyKey: DEFAULT.currencyKey,
-    ticker: DEFAULT.ticker,
     tickerKey: DEFAULT.tickerKey,
   },
   setCoinState: () => {},
@@ -118,9 +116,7 @@ export const CoinsProvider = ({ children }: any) => {
 
   const storedSettings = getStoredObject('settings');
   const [coinState, setCoinState] = useState<CoinState>({
-    currency: storedSettings?.currency || DEFAULT.currency,
     currencyKey: storedSettings?.currencyKey || DEFAULT.currencyKey,
-    ticker: storedSettings?.ticker || DEFAULT.ticker,
     tickerKey: storedSettings?.tickerKey || DEFAULT.tickerKey,
   });
 
@@ -147,23 +143,18 @@ export const CoinsProvider = ({ children }: any) => {
   );
 
   const handleCurrencyChange = (newCurrencyKey: CurrencyKey) => {
-    const _currency = SPECS_CURRENCIES[newCurrencyKey];
-
     setCoinState((prev) => ({
       ...prev,
       currencyKey: newCurrencyKey,
-      currency: _currency,
     }));
   };
 
   const handleTickerSelect = (newTickerKey: TickerKey) => {
-    const _ticker = SPECS_TICKERS[newTickerKey];
     const _selectedTickerOption = tickerOptions.find((option) => option.value === newTickerKey);
 
     setCoinState((prev) => ({
       ...prev,
       tickerKey: newTickerKey,
-      ticker: _ticker,
     }));
 
     if (_selectedTickerOption) setSelectedTickerOption(_selectedTickerOption);
@@ -234,6 +225,7 @@ export const CoinsProvider = ({ children }: any) => {
 
   const loadPersistedSettings = () => {
     const storedSettings = getStoredObject('settings');
+    console.log('🚀  |  file: coinsContext.tsx:228  |  loadPersistedSettings  |  storedSettings:', storedSettings);
     if (storedSettings) {
       setCoinState((prev) => ({
         ...prev,
