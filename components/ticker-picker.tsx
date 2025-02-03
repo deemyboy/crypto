@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ViewStyle, Dimensions, StyleSheet } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
 
 import { SPECS_TICKERS } from '@/constants/Api';
-import { useCoins } from '@/contexts/coinsContext';
 import { TickerKey, Option } from '@/types/types';
 import { useTheme } from 'react-native-paper';
 
@@ -30,6 +30,11 @@ export const TickerPicker = ({ tickerKey, onTickerChange, options }: TickerPicke
     }
   };
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) setOpen(false);
+  }, [isFocused]);
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
