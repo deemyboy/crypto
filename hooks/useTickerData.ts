@@ -11,6 +11,7 @@ import {
   CurrencyValue,
 } from '../types/types';
 import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
+import { getTicker, getCurrency } from '@/utils/utils';
 
 export const useTickerData = () => {
   const { coinState, combinedTickerData } = useCoins();
@@ -31,17 +32,30 @@ export const useTickerData = () => {
     currencies: [],
   });
 
+  const ticker = getTicker(coinState.tickerKey);
+  const currency = getCurrency(coinState.currencyKey);
+
   useEffect(() => {
+    if (!combinedTickerData || !ticker || !currency) {
+      return;
+    }
+
+    const componentData = combinedTickerData[ticker];
+
+    if (!componentData) {
+      return;
+    }
+
     if (combinedTickerData) {
-      const componentData = combinedTickerData[coinState.ticker];
+      const componentData = combinedTickerData[ticker];
 
       if (componentData) {
         const { quotes: componentQuotes, last_updated: timeAgoData } = componentData;
 
         const percentChanges: Record<string, string | undefined> = {};
 
-        if (componentQuotes && componentQuotes[coinState.currency]) {
-          const currencyQuotes = componentQuotes[coinState.currency] as TickerQuote;
+        if (componentQuotes && componentQuotes[currency]) {
+          const currencyQuotes = componentQuotes[currency] as TickerQuote;
 
           const orderedKeys: (keyof TickerQuote)[] = [
             'percent_change_15m',
@@ -67,7 +81,7 @@ export const useTickerData = () => {
           isLast: index === array.length - 1,
         }));
 
-        const price = componentQuotes[coinState.currency]?.price || '0';
+        const price = componentQuotes[currency]?.price || '0';
 
         const tickers = Object.entries(SPECS_TICKERS).map(([key, value]) => ({
           key: key as TickerKey,
@@ -89,7 +103,7 @@ export const useTickerData = () => {
         });
       }
     }
-  }, [combinedTickerData, coinState.ticker, coinState.currency]);
+  }, [combinedTickerData, coinState]);
 
   return tickerData;
 };

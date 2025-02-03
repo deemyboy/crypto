@@ -90,9 +90,7 @@ export type Option = {
 };
 
 export type CoinState = {
-  currency: CurrencyValue;
   currencyKey: CurrencyKey;
-  ticker: TickerValue;
   tickerKey: TickerKey;
 };
 

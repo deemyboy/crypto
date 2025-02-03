@@ -38,7 +38,6 @@ export const SPECS_CURRENCIES = {
   usd: 'USD',
   eur: 'EUR',
   aud: 'AUD',
-  bhd: 'BHD',
 } as const;
 
 export const DEFAULT_CURRENCIES_SELECTED_FOR_UI = {
@@ -46,5 +45,4 @@ export const DEFAULT_CURRENCIES_SELECTED_FOR_UI = {
   usd: true,
   eur: false,
   aud: false,
-  bhd: false,
 } as const;
