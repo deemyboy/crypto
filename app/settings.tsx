@@ -11,7 +11,7 @@ const Settings = () => {
 
   const { colors } = theme;
 
-  const { availableCurrencies, availableTickers, setAvailableTickers, setAvailableCurrencies } = useCoins();
+  const { availableCurrencies, availableTickers, setAvailableTickers, setAvailableCurrencies, coinState } = useCoins();
 
   return (
     <>
@@ -42,6 +42,7 @@ const Settings = () => {
               selectedItems={availableTickers}
               setSelectedItems={setAvailableTickers}
               minSelection={1}
+              selectedKey={coinState.tickerKey}
               style={styles.tickersPanel}
             />
 
@@ -53,6 +54,7 @@ const Settings = () => {
               setSelectedItems={setAvailableCurrencies}
               maxSelection={3}
               minSelection={2}
+              selectedKey={coinState.currencyKey}
               style={styles.currenciesPanel}
             />
           </View>
