@@ -108,10 +108,10 @@ export type CoinsContextType = {
   setAvailableTickers: React.Dispatch<React.SetStateAction<Record<TickerKey, boolean>>>;
   availableCurrencies: Record<CurrencyKey, boolean>;
   setAvailableCurrencies: React.Dispatch<React.SetStateAction<Record<CurrencyKey, boolean>>>;
-  selectedCurrenciesForUI: Partial<Record<CurrencyKey, CurrencyValue>>;
-  setSelectedCurrenciesForUI: React.Dispatch<React.SetStateAction<Partial<Record<CurrencyKey, CurrencyValue>>>>;
-  selectedTickersForUI: Partial<Record<TickerKey, TickerValue>>;
-  setSelectedTickersForUI: React.Dispatch<React.SetStateAction<Partial<Record<TickerKey, TickerValue>>>>;
+  selectedCurrenciesForUI: CurrencyKey[]
+  setSelectedCurrenciesForUI: React.Dispatch<React.SetStateAction<CurrencyKey[]>>;
+  selectedTickersForUI: TickerKey[]]
+  setSelectedTickersForUI: React.Dispatch<React.SetStateAction<TickerKey[]>>;
 };
 
 export type TickerQuote = {

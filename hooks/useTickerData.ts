@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import {
-  Trend,
-  SimplifiedTickerDataType,
-  TickerMap as Tickers,
-  TickerQuote,
-  TickerValue,
-  TickerKey,
-  CurrencyKey,
-  CurrencyValue,
-} from '../types/types';
+import { Trend, SimplifiedTickerDataType, TickerQuote, TickerKey, CurrencyKey } from '../types/types';
 import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import { getTicker, getCurrency } from '@/utils/utils';
 
@@ -21,8 +12,8 @@ export const useTickerData = () => {
     timeAgo: string | undefined;
     trends: Trend[];
     price: string;
-    tickers: { key: TickerKey; value: TickerValue }[];
-    currencies: { key: CurrencyKey; value: CurrencyValue }[];
+    tickers: TickerKey[];
+    currencies: CurrencyKey[];
   }>({
     quotes: undefined,
     timeAgo: undefined,
@@ -50,13 +41,11 @@ export const useTickerData = () => {
       const componentData = combinedTickerData[ticker];
 
       if (componentData) {
-        const { quotes: componentQuotes, last_updated: timeAgoData } = componentData;
+        const { quotes: currencyQuotes, last_updated: timeAgoData } = componentData;
 
         const percentChanges: Record<string, string | undefined> = {};
 
-        if (componentQuotes && componentQuotes[currency]) {
-          const currencyQuotes = componentQuotes[currency] as TickerQuote;
-
+        if (currencyQuotes) {
           const orderedKeys: (keyof TickerQuote)[] = [
             'percent_change_15m',
             'percent_change_30m',
@@ -71,7 +60,7 @@ export const useTickerData = () => {
 
           orderedKeys.forEach((key) => {
             const trimmedKey = key.replace('percent_change_', '');
-            percentChanges[trimmedKey] = currencyQuotes[key];
+            percentChanges[trimmedKey] = currencyQuotes[currency][key];
           });
         }
 
@@ -81,20 +70,14 @@ export const useTickerData = () => {
           isLast: index === array.length - 1,
         }));
 
-        const price = componentQuotes[currency]?.price || '0';
+        const price = currencyQuotes?.[currency]?.price ?? '0';
 
-        const tickers = Object.entries(SPECS_TICKERS).map(([key, value]) => ({
-          key: key as TickerKey,
-          value: value as TickerValue,
-        }));
+        const tickers = Object.entries(SPECS_TICKERS).map(([key]) => key as TickerKey);
 
-        const currencies = Object.entries(SPECS_CURRENCIES).map(([key, value]) => ({
-          key: key as CurrencyKey,
-          value: value as CurrencyValue,
-        }));
+        const currencies = Object.entries(SPECS_CURRENCIES).map(([key]) => key as CurrencyKey);
 
         setTickerData({
-          quotes: componentQuotes,
+          quotes: currencyQuotes,
           timeAgo: timeAgoData,
           trends,
           price,

@@ -2,41 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { SegmentedButtons, useTheme } from 'react-native-paper';
 
 import { useCoins } from '@/contexts/coinsContext';
-import { CurrencyKey, CurrencyValue } from '@/types/types';
+import { CurrencyKey } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
+import { getCurrency } from '@/utils/utils';
 
 export const CurrencySelector: React.FC = () => {
   const { handleCurrencyChange, selectedCurrenciesForUI } = useCoins();
   const theme = useTheme();
   const { colors } = theme;
-  const currencies = Object.entries(selectedCurrenciesForUI) as [CurrencyKey, CurrencyValue][];
+  const currencies: CurrencyKey[] = selectedCurrenciesForUI;
 
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(
-    currencies.length > 0 ? currencies[0][0] : null
+    currencies.length > 0 ? currencies[0] : null
   );
 
   useEffect(() => {
-    if (!selectedCurrency || !selectedCurrenciesForUI[selectedCurrency]) {
-      const firstAvailableCurrency = currencies.length > 0 ? currencies[0][0] : null;
+    if (!selectedCurrency || !currencies.includes(selectedCurrency)) {
+      const firstAvailableCurrency = currencies.length > 0 ? currencies[0] : null;
       setSelectedCurrency(firstAvailableCurrency);
 
       if (firstAvailableCurrency) {
         handleCurrencyChange(firstAvailableCurrency);
       }
     }
-  }, [selectedCurrenciesForUI]);
+  }, [selectedCurrenciesForUI, selectedCurrency, currencies]);
 
-  const currencyButtons = currencies.map(([key, label], index) => {
+  const currencyButtons = currencies.map((key, index) => {
     const isChecked = selectedCurrency === key;
-
+    const typedKey: CurrencyKey = key;
     return {
       value: key,
-      label: label,
+      label: getCurrency(typedKey),
       icon: isChecked ? 'check' : '',
       checked: isChecked,
       onPress: () => {
-        setSelectedCurrency(key);
-        handleCurrencyChange(key);
+        setSelectedCurrency(typedKey);
+        handleCurrencyChange(typedKey);
       },
       style: [
         {
