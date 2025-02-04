@@ -1,9 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Checkbox, useTheme } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { usePreferences } from '@/contexts/preferencesContext';
-import { CheckboxListProps } from '@/types/types';
+import { CurrencyKey, TickerKey, CheckboxListProps } from '@/types/types';
+import { Checkbox, useTheme, Text, Modal, Portal, Button } from 'react-native-paper';
+
+import { useCoins } from '@/contexts/coinsContext';
+import { isCurrencyKey, isTickerKey } from '@/utils/utils';
 
 export const CheckboxList = <T extends string>({
   title,
@@ -12,6 +15,7 @@ export const CheckboxList = <T extends string>({
   setSelectedItems,
   maxSelection = Infinity,
   minSelection = 0,
+  selectedKey,
   style,
 }: CheckboxListProps<T>) => {
   const { colors } = useTheme();
@@ -36,31 +40,47 @@ export const CheckboxList = <T extends string>({
           (isChecked && selectedCount === minSelection) || (!isChecked && selectedCount === maxSelection);
 
         return (
-          <View key={key} style={[styles.checkboxContainer, {}]}>
-            <Checkbox
-              status={isChecked ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setSelectedItems((prev) => ({
-                  ...prev,
-                  [typedKey]: !isChecked,
-                }));
-              }}
-              uncheckedColor={colors.onPrimary}
-              disabled={disabled}
-            />
-            <Text
-              style={{
-                // @ts-ignore
-                color: disabled ? colors.checkboxDisabled : colors.onPrimary,
-                marginLeft: 5,
-                fontFamily: 'Roboto_400Regular',
-              }}
-            >
-              {
-                // @ts-ignore
-                label.toUpperCase()
-              }
-            </Text>
+          <View key={key} style={[styles.checkboxContainer, { marginVertical: 1 }]}>
+            <View style={[styles.checkboxAndLabel, {}]}>
+              <Checkbox.Android
+                status={isChecked ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setSelectedItems((prev) => ({
+                    ...prev,
+                    [typedKey]: !isChecked,
+                  }));
+                }}
+                mode="android"
+                uncheckedColor={colors.onPrimary}
+                disabled={disabled}
+                color={disabled ? colors.checkboxDisabled : isChecked ? colors.primary : colors.onPrimary}
+                theme={(colors.onSurfaceDisabled = colors.checkboxDisabled)}
+                // color={
+                //   disabled
+                //     ? selectedKey === typedKey
+                //       ? colors.checkboxDisabledSelected // Case 1: Disabled & Selected → Use checkboxDisabledSelected color
+                //       : colors.checkboxDisabled // Case 2: Disabled but NOT selected → Use checkboxDisabled color
+                //     : selectedKey === typedKey
+                //     ? colors.primary // Case 3: Not Disabled & Selected → Use primary color
+                //     : colors.onPrimary
+                // }
+              />
+              <Text
+                style={{
+                  // @ts-ignore
+                  color: disabled ? colors.checkboxDisabled : colors.onPrimary,
+
+                  marginLeft: 5,
+                  fontFamily: selectedKey === typedKey ? 'Roboto_700Bold' : 'Roboto_400Regular',
+                }}
+                variant={selectedKey === typedKey ? 'labelLarge' : 'labelMedium'}
+              >
+                {
+                  // @ts-ignore
+                  label.toUpperCase()
+                }
+              </Text>
+            </View>
           </View>
         );
       })}
@@ -83,6 +103,12 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  checkboxAndLabel: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });
