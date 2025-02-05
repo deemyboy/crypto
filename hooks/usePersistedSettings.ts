@@ -20,6 +20,10 @@ export const usePersistedSettings = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
+    console.log('🚀 | App initialized with state:', AppState.currentState);
+  }, []);
+
+  useEffect(() => {
     console.log('🚀 | coinState updated: ', coinState);
     console.log('🚀 | selectedCurrenciesForUI updated: ', selectedCurrenciesForUI);
     console.log('🚀 | selectedTickersForUI updated: ', selectedTickersForUI);
