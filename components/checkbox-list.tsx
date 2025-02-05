@@ -23,7 +23,7 @@ export const CheckboxList = <T extends string>({
       style={[
         styles.panel,
         { ...style },
-        { borderColor: colors.onPrimary, borderWidth: 2, backgroundColor: isThemeDark ? '#0003' : '#0002' },
+        { borderColor: colors.onPrimary, borderWidth: 2, backgroundColor: isThemeDark ? '#0003' : '#eee1' },
       ]}
     >
       <Text style={[styles.title, { fontFamily: 'Roboto_500Medium', marginVertical: 5, color: colors.onPrimary }]}>
