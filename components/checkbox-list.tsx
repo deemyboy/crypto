@@ -21,24 +21,6 @@ export const CheckboxList = <T extends string>({
   const { colors } = useTheme();
   const selectedCount = Object.values(selectedItems).filter(Boolean).length;
   const { isThemeDark } = usePreferences();
-  const { handleCurrencyChange, handleTickerSelect } = useCoins();
-
-  const [isModalVisible, setModalVisible] = useState(false);
-  console.log('🚀  |  file: checkbox-list.tsx:37  |  isModalVisible:', isModalVisible);
-  const [newSelectedKey, setNewSelectedKey] = useState<TickerKey | CurrencyKey | null>(null);
-
-  const handleCheckboxPress = (typedKey: T, isChecked: boolean) => {
-    if (isChecked) {
-      setSelectedItems((prev) => ({
-        ...prev,
-        [typedKey]: !isChecked,
-      }));
-    } else {
-      // If unchecking thtypedKeye selected item, show the modal
-      setNewSelectedKey(); // Store the item to uncheck
-      setModalVisible(true); // Show the modal
-    }
-  };
 
   return (
     <View
@@ -72,11 +54,22 @@ export const CheckboxList = <T extends string>({
                 uncheckedColor={colors.onPrimary}
                 disabled={disabled}
                 color={disabled ? colors.checkboxDisabled : isChecked ? colors.primary : colors.onPrimary}
+                theme={(colors.onSurfaceDisabled = colors.checkboxDisabled)}
+                // color={
+                //   disabled
+                //     ? selectedKey === typedKey
+                //       ? colors.checkboxDisabledSelected // Case 1: Disabled & Selected → Use checkboxDisabledSelected color
+                //       : colors.checkboxDisabled // Case 2: Disabled but NOT selected → Use checkboxDisabled color
+                //     : selectedKey === typedKey
+                //     ? colors.primary // Case 3: Not Disabled & Selected → Use primary color
+                //     : colors.onPrimary
+                // }
               />
               <Text
                 style={{
                   // @ts-ignore
                   color: disabled ? colors.checkboxDisabled : colors.onPrimary,
+
                   marginLeft: 5,
                   fontFamily: selectedKey === typedKey ? 'Roboto_700Bold' : 'Roboto_400Regular',
                 }}
