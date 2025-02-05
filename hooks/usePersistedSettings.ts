@@ -20,7 +20,8 @@ export const usePersistedSettings = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    console.log('🚀 | App initialized with state:', AppState.currentState);
+    console.log('🚀 | usePersistedSettings initialized, forcing loadPersistedSettings...');
+    loadPersistedSettings();
   }, []);
 
   useEffect(() => {
