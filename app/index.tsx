@@ -22,7 +22,7 @@ export default function HomeScreen() {
     <>
       <LinearGradient
         start={[0.9, 0.4]}
-        end={[0.1, 0.9]}
+        end={[0.4, 0.9]}
         colors={[colors.surface, colors.onSurfaceVariant]}
         style={styles.gradient}
       >
