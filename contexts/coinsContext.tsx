@@ -93,13 +93,12 @@ export const CoinsProvider = ({ children }: any) => {
     getSelectedTickersForUI(availableTickers)
   );
 
-  const isFirstRender = useRef(true);
-
   const storedSettings = getStoredObject('settings');
   const [coinState, setCoinState] = useState<CoinState>({
     currencyKey: storedSettings?.currencyKey || DEFAULT.currencyKey,
     tickerKey: storedSettings?.tickerKey || DEFAULT.tickerKey,
   });
+  console.log('🚀  |  coinsContext.tsx:104  |  CoinsProvider  |  coinState:', coinState);
 
   const formatCurrency = (amount: number, value: CurrencyValue) => {
     return new Intl.NumberFormat('en-US', {
@@ -193,71 +192,6 @@ export const CoinsProvider = ({ children }: any) => {
 
     fetchAllTickerData();
   }, [fetchPriceData]);
-
-  useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
-      console.log('🚀  |  file: coinsContext.tsx:220  |  handleAppStateChange  |,nextAppState:', nextAppState);
-      if (nextAppState === 'inactive' || nextAppState === 'background') {
-        saveSettingsDebounced();
-      } else if (nextAppState === 'active') {
-        loadPersistedSettings();
-      }
-    };
-
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  // const loadPersistedSettings = () => {
-  //   const storedSettings = getStoredObject('settings');
-  //   // console.log('🚀  |  file: coinsContext.tsx:237  |  loadPersistedSettings  |  storedSettings:', storedSettings);
-  //   // console.log(
-  //   //   '🚀  |  file: coinsContext.tsx:238  |  loadPersistedSettings  |  isEqualWith(storedSettings, coinState):',
-  //   //   isEqualWith(storedSettings, coinState)
-  //   // );
-  //   if (storedSettings && !isEqualWith(storedSettings, coinState)) {
-  //     setCoinState((prev) => ({
-  //       ...prev,
-  //       ...storedSettings,
-  //     }));
-  //   }
-  // };
-
-  // const saveSettings = () => {
-  //   const storedSettings = getStoredObject('settings');
-  //   console.log('🚀  |  file: coinsContext.tsx:259  |  saveSettings  |:');
-  //   console.log(
-  //     '🚀  |  file: coinsContext.tsx:254  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
-  //     isEqualWith(storedSettings, coinState)
-  //   );
-  //   if (!isEqualWith(storedSettings, coinState)) {
-  //     console.log(
-  //       '🚀  |  file: coinsContext.tsx:259  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
-  //       isEqualWith(storedSettings, coinState)
-  //     );
-  //     setCoinState((prev) => {
-  //       console.log('🚀  |  file: coinsContext.tsx:263  |  setCoinState  |  prev:', prev, 'coinState', coinState);
-  //       storeObject('settings', prev);
-  //       return prev;
-  //     });
-  //   }
-  // };
-
-  const saveSettingsDebounced = useCallback(
-    debounce(() => saveSettings(), 100),
-    [coinState]
-  );
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    saveSettingsDebounced();
-  }, [coinState]);
 
   useEffect(() => {
     if (selectedTickersForUI) makeTickerOptions(selectedTickersForUI);
