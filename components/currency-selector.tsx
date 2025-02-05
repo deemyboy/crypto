@@ -2,41 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { SegmentedButtons, useTheme } from 'react-native-paper';
 
 import { useCoins } from '@/contexts/coinsContext';
-import { CurrencyKey, CurrencyValue } from '@/types/types';
 import { CUSTOM_CORNER_RADIUS } from '@/constants/sizes';
+import { getCurrency } from '@/utils/utils';
+import { CurrencyKey } from '@/types/types';
 
 export const CurrencySelector: React.FC = () => {
-  const { handleCurrencyChange, selectedCurrenciesForUI } = useCoins();
+  const { handleCurrencyChange, selectedCurrenciesForUI, coinState, setCoinState } = useCoins();
   const theme = useTheme();
   const { colors } = theme;
-  const currencies = Object.entries(selectedCurrenciesForUI) as [CurrencyKey, CurrencyValue][];
+  const currencies: CurrencyKey[] = selectedCurrenciesForUI;
 
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyKey | null>(
-    currencies.length > 0 ? currencies[0][0] : null
+    coinState.currencyKey || (currencies.length > 0 ? currencies[0] : null)
   );
 
   useEffect(() => {
-    if (!selectedCurrency || !selectedCurrenciesForUI[selectedCurrency]) {
-      const firstAvailableCurrency = currencies.length > 0 ? currencies[0][0] : null;
-      setSelectedCurrency(firstAvailableCurrency);
-
-      if (firstAvailableCurrency) {
-        handleCurrencyChange(firstAvailableCurrency);
-      }
+    if (!selectedCurrency || !selectedCurrenciesForUI.includes(selectedCurrency)) {
+      const currencyToSet = coinState.currencyKey || selectedCurrenciesForUI[0];
+      setSelectedCurrency(currencyToSet);
+      handleCurrencyChange(currencyToSet);
     }
-  }, [selectedCurrenciesForUI]);
 
-  const currencyButtons = currencies.map(([key, label], index) => {
+    if (!selectedCurrenciesForUI.includes(coinState.currencyKey)) {
+      const newCurrencyKey = selectedCurrenciesForUI[0] || null;
+      setCoinState((prevState) => ({
+        ...prevState,
+        currencyKey: newCurrencyKey,
+      }));
+    }
+  }, [selectedCurrenciesForUI, coinState.currencyKey, selectedCurrency]);
+
+  const currencyButtons = currencies.map((key, index) => {
     const isChecked = selectedCurrency === key;
-
+    const typedKey: CurrencyKey = key;
     return {
       value: key,
-      label: label,
+      label: getCurrency(typedKey),
       icon: isChecked ? 'check' : '',
       checked: isChecked,
       onPress: () => {
-        setSelectedCurrency(key);
-        handleCurrencyChange(key);
+        setSelectedCurrency(typedKey);
+        handleCurrencyChange(typedKey);
       },
       style: [
         {
@@ -45,7 +51,8 @@ export const CurrencySelector: React.FC = () => {
           justifyContent: 'center',
           height: 50,
         },
-        index === 0 // this setup allows the end corner radius to match regardless of the number of currencies
+        // this setup allows the end corner radius to match regardless of the number of currencies
+        index === 0
           ? { borderTopLeftRadius: CUSTOM_CORNER_RADIUS, borderBottomLeftRadius: CUSTOM_CORNER_RADIUS }
           : index === (currencies?.length ?? 0) - 1
           ? { borderTopRightRadius: CUSTOM_CORNER_RADIUS, borderBottomRightRadius: CUSTOM_CORNER_RADIUS }

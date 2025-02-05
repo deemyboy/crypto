@@ -1,28 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useCoins } from '../contexts/coinsContext';
-import {
-  Trend,
-  SimplifiedTickerDataType,
-  TickerMap as Tickers,
-  TickerQuote,
-  TickerValue,
-  TickerKey,
-  CurrencyKey,
-  CurrencyValue,
-} from '../types/types';
+import { Trend, SimplifiedTickerDataType, TickerQuote, TickerKey, CurrencyKey } from '../types/types';
 import { SPECS_CURRENCIES, SPECS_TICKERS } from '@/constants/Api';
 import { getTicker, getCurrency } from '@/utils/utils';
 
 export const useTickerData = () => {
-  const { coinState, combinedTickerData } = useCoins();
+  const { coinState, combinedTickerData, setRefreshing, selectedCurrenciesForUI, setSelectedCurrenciesForUI } =
+    useCoins();
 
   const [tickerData, setTickerData] = useState<{
     quotes: SimplifiedTickerDataType['quotes'] | undefined;
     timeAgo: string | undefined;
     trends: Trend[];
     price: string;
-    tickers: { key: TickerKey; value: TickerValue }[];
-    currencies: { key: CurrencyKey; value: CurrencyValue }[];
+    tickers: TickerKey[];
+    currencies: CurrencyKey[];
   }>({
     quotes: undefined,
     timeAgo: undefined,
@@ -32,77 +24,83 @@ export const useTickerData = () => {
     currencies: [],
   });
 
-  const ticker = getTicker(coinState.tickerKey);
-  const currency = getCurrency(coinState.currencyKey);
+  const currentTicker = getTicker(coinState.tickerKey);
+  const currentCurrency = getCurrency(coinState.currencyKey);
 
   useEffect(() => {
-    if (!combinedTickerData || !ticker || !currency) {
+    if (!combinedTickerData || !currentTicker) {
       return;
     }
 
-    const componentData = combinedTickerData[ticker];
+    const componentData = combinedTickerData[currentTicker];
 
     if (!componentData) {
       return;
     }
 
-    if (combinedTickerData) {
-      const componentData = combinedTickerData[ticker];
+    const { quotes: currencyQuotes, last_updated: timeAgoData } = componentData;
 
-      if (componentData) {
-        const { quotes: componentQuotes, last_updated: timeAgoData } = componentData;
+    const missingCurrencies: CurrencyKey[] = [];
 
-        const percentChanges: Record<string, string | undefined> = {};
-
-        if (componentQuotes && componentQuotes[currency]) {
-          const currencyQuotes = componentQuotes[currency] as TickerQuote;
-
-          const orderedKeys: (keyof TickerQuote)[] = [
-            'percent_change_15m',
-            'percent_change_30m',
-            'percent_change_1h',
-            'percent_change_6h',
-            'percent_change_12h',
-            'percent_change_24h',
-            'percent_change_7d',
-            'percent_change_30d',
-            'percent_change_1y',
-          ];
-
-          orderedKeys.forEach((key) => {
-            const trimmedKey = key.replace('percent_change_', '');
-            percentChanges[trimmedKey] = currencyQuotes[key];
-          });
-        }
-
-        const trends = Object.entries(percentChanges).map(([key, value], index, array) => ({
-          key,
-          value: value || '0',
-          isLast: index === array.length - 1,
-        }));
-
-        const price = componentQuotes[currency]?.price || '0';
-
-        const tickers = Object.entries(SPECS_TICKERS).map(([key, value]) => ({
-          key: key as TickerKey,
-          value: value as TickerValue,
-        }));
-
-        const currencies = Object.entries(SPECS_CURRENCIES).map(([key, value]) => ({
-          key: key as CurrencyKey,
-          value: value as CurrencyValue,
-        }));
-
-        setTickerData({
-          quotes: componentQuotes,
-          timeAgo: timeAgoData,
-          trends,
-          price,
-          tickers,
-          currencies,
-        });
+    selectedCurrenciesForUI.forEach((currencyKey) => {
+      const currency = SPECS_CURRENCIES[currencyKey];
+      if (!currencyQuotes?.[currency]) {
+        console.warn(`⚠️ Missing currency data for: ${currency}`);
+        missingCurrencies.push(currencyKey);
       }
+    });
+
+    if (missingCurrencies.length > 0) {
+      setSelectedCurrenciesForUI((prev) => {
+        const newCurrencies = missingCurrencies.filter((currencyKey) => !prev.includes(currencyKey));
+        return [...prev, ...newCurrencies];
+      });
     }
+
+    const percentChanges: Record<string, string | undefined> = {};
+
+    if (currencyQuotes) {
+      const orderedKeys: (keyof TickerQuote)[] = [
+        'percent_change_15m',
+        'percent_change_30m',
+        'percent_change_1h',
+        'percent_change_6h',
+        'percent_change_12h',
+        'percent_change_24h',
+        'percent_change_7d',
+        'percent_change_30d',
+        'percent_change_1y',
+      ];
+
+      orderedKeys.forEach((key) => {
+        const trimmedKey = key.replace('percent_change_', '');
+        selectedCurrenciesForUI.forEach((currencyKey) => {
+          const currency = SPECS_CURRENCIES[currencyKey];
+          percentChanges[trimmedKey] = currencyQuotes[currency]?.[key] || '0';
+        });
+      });
+    }
+
+    const trends = Object.entries(percentChanges).map(([key, value], index, array) => ({
+      key,
+      value: value || '0',
+      isLast: index === array.length - 1,
+    }));
+
+    const price = currencyQuotes?.[currentCurrency]?.price ?? '0';
+
+    const tickers = Object.entries(SPECS_TICKERS).map(([key]) => key as TickerKey);
+
+    const currencies = Object.entries(SPECS_CURRENCIES).map(([key]) => key as CurrencyKey);
+
+    setTickerData({
+      quotes: currencyQuotes,
+      timeAgo: timeAgoData,
+      trends,
+      price,
+      tickers,
+      currencies,
+    });
   }, [combinedTickerData, coinState]);
 
   return tickerData;

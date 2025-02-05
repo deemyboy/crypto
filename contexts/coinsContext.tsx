@@ -10,7 +10,7 @@ import {
   SPECS_CURRENCIES,
   SPECS_TICKERS,
 } from '@/constants/Api';
-import { debounce } from '@/utils/utils';
+import { debounce, getCurrency, getTicker } from '@/utils/utils';
 import {
   CoinsContextType,
   Option,
@@ -20,9 +20,6 @@ import {
   CurrencyValue,
   TickerKey,
   CoinState,
-  CurrencyMap,
-  TickerMap,
-  TickerValue,
 } from '@/types/types';
 
 const getDynamicAvailableState = <T extends Record<string, boolean>>(
@@ -52,9 +49,9 @@ const CoinsContext = createContext<CoinsContextType>({
   setAvailableTickers: () => {},
   availableCurrencies: {} as Record<string, boolean>,
   setAvailableCurrencies: () => {},
-  selectedCurrenciesForUI: {} as Record<CurrencyKey, CurrencyValue>,
+  selectedCurrenciesForUI: [],
   setSelectedCurrenciesForUI: () => {},
-  selectedTickersForUI: {} as Record<TickerKey, TickerValue>,
+  selectedTickersForUI: [],
   setSelectedTickersForUI: () => {},
 });
 
@@ -78,37 +75,17 @@ export const CoinsProvider = ({ children }: any) => {
   );
 
   const getSelectedCurrenciesForUI = (currenciesAvailable: Record<CurrencyKey, boolean>) => {
-    const selectedCurrencies: Partial<Record<CurrencyKey, CurrencyValue>> = {};
-
-    Object.entries(SPECS_CURRENCIES).forEach(([key, value]) => {
-      const _currencyKey = key as CurrencyKey;
-      const _currencyValue = value as CurrencyValue;
-
-      if (currenciesAvailable[_currencyKey] && selectedCurrencies[_currencyKey] === undefined) {
-        selectedCurrencies[_currencyKey] = _currencyValue;
-      }
-    });
-
-    return selectedCurrencies;
+    return Object.keys(currenciesAvailable).filter((key) => currenciesAvailable[key as CurrencyKey]) as CurrencyKey[];
+  };
+  const getSelectedTickersForUI = (tickersAvailable: Record<TickerKey, boolean>) => {
+    return Object.keys(tickersAvailable).filter((key) => tickersAvailable[key as TickerKey]) as TickerKey[];
   };
 
-  const [selectedCurrenciesForUI, setSelectedCurrenciesForUI] = useState<Partial<Record<CurrencyKey, CurrencyValue>>>(
-    getSelectedCurrenciesForUI(DEFAULT_CURRENCIES_SELECTED_FOR_UI)
+  const [selectedCurrenciesForUI, setSelectedCurrenciesForUI] = useState<CurrencyKey[]>(
+    getSelectedCurrenciesForUI(availableCurrencies)
   );
 
-  const getSelectedTickersForUI = (tickersAvailable: Record<TickerKey, boolean>) => {
-    const selectedTickers: Partial<Record<TickerKey, TickerValue>> = {};
-
-    Object.entries(SPECS_TICKERS).forEach(([key, value]) => {
-      if (tickersAvailable[key as TickerKey] && selectedTickers[key as TickerKey] === undefined) {
-        selectedTickers[key as TickerKey] = value as TickerValue;
-      }
-    });
-
-    return selectedTickers;
-  };
-
-  const [selectedTickersForUI, setSelectedTickersForUI] = useState<Partial<Record<TickerKey, TickerValue>>>(
+  const [selectedTickersForUI, setSelectedTickersForUI] = useState<TickerKey[]>(
     getSelectedTickersForUI(availableTickers)
   );
 
@@ -128,9 +105,9 @@ export const CoinsProvider = ({ children }: any) => {
   };
 
   const fetchPriceData = useCallback(
-    async (currentTicker: string, selectedCurrencies: string[]) => {
+    async (currentTicker: string, selectedCurrenciesAsParams: string) => {
       try {
-        const _tickerData = await fetchTickerData(currentTicker, selectedCurrencies);
+        const _tickerData = await fetchTickerData(currentTicker, selectedCurrenciesAsParams);
 
         return _tickerData;
       } catch (error) {
@@ -164,19 +141,25 @@ export const CoinsProvider = ({ children }: any) => {
     return formatCurrency(Math.round(+amount * 100) / 100, currencyValue);
   };
 
-  const makeTickerOptions = (optionsData: Partial<Record<TickerKey, TickerValue>>) => {
-    const _tickersOptions: Option[] = Object.entries(optionsData).map(([key, value]) => ({
-      label: `${value.split('-')[1].toUpperCase()} - ${value.split('-')[0].toUpperCase()}`,
-      value: key,
-    }));
-    _tickersOptions ? setTickerOptions(() => _tickersOptions) : [];
-    _tickersOptions ? setSelectedTickerOption(_tickersOptions[0]) : null;
+  const makeTickerOptions = (optionsData: TickerKey[]) => {
+    const _tickersOptions: Option[] = optionsData.map((key) => {
+      const value = getTicker(key); // Retrieve TickerValue using the helper function
+      return {
+        label: `${value.split('-')[1].toUpperCase()} - ${value.split('-')[0].toUpperCase()}`,
+        value: key,
+      };
+    });
+
+    if (_tickersOptions.length) {
+      setTickerOptions(_tickersOptions);
+      setSelectedTickerOption(_tickersOptions[0]);
+    }
   };
 
   useEffect(() => {
     const fetchAllTickerData = async () => {
-      const _tickers = Object.values(selectedTickersForUI) as Array<string>;
-      const _currencies = Object.values(selectedCurrenciesForUI) as Array<string>;
+      const _tickers = selectedTickersForUI.map((key) => getTicker(key)) as Array<string>;
+      const _currencies = selectedCurrenciesForUI.map((key) => getCurrency(key)).join(',') as string;
 
       const results = await Promise.all(
         _tickers.map(async (key) => {
@@ -225,7 +208,6 @@ export const CoinsProvider = ({ children }: any) => {
 
   const loadPersistedSettings = () => {
     const storedSettings = getStoredObject('settings');
-    console.log('🚀  |  file: coinsContext.tsx:228  |  loadPersistedSettings  |  storedSettings:', storedSettings);
     if (storedSettings) {
       setCoinState((prev) => ({
         ...prev,
