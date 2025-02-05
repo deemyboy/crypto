@@ -20,6 +20,9 @@ import {
   CurrencyValue,
   TickerKey,
   CoinState,
+  CurrencyMap,
+  TickerMap,
+  TickerValue,
 } from '@/types/types';
 
 const getDynamicAvailableState = <T extends Record<string, boolean>>(

@@ -1,9 +1,17 @@
+import { usePreferences } from '@/contexts/preferencesContext';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Checkbox, useTheme } from 'react-native-paper';
 
-import { usePreferences } from '@/contexts/preferencesContext';
-import { CheckboxListProps } from '@/types/types';
+interface CheckboxListProps<T extends string> {
+  title: string;
+  items: Record<T, string>;
+  selectedItems: Record<T, boolean>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Record<T, boolean>>>;
+  maxSelection?: number;
+  minSelection?: number;
+  style?: object;
+}
 
 export const CheckboxList = <T extends string>({
   title,
