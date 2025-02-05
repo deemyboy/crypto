@@ -1,18 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { ViewStyle, Dimensions, StyleSheet } from 'react-native';
+import { ViewStyle, StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { useIsFocused } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
 
 import { SPECS_TICKERS } from '@/constants/Api';
-import { TickerKey, Option } from '@/types/types';
-import { useTheme } from 'react-native-paper';
-
-interface TickerPickerProps {
-  tickerKey: TickerKey;
-  onTickerChange: (ticker: TickerKey) => void;
-  options: Option[];
-}
+import { TickerKey, TickerPickerProps } from '@/types/types';
 
 export const TickerPicker = ({ tickerKey, onTickerChange, options }: TickerPickerProps) => {
   const theme = useTheme();

@@ -90,9 +90,7 @@ export type Option = {
 };
 
 export type CoinState = {
-  currency: CurrencyValue;
   currencyKey: CurrencyKey;
-  ticker: TickerValue;
   tickerKey: TickerKey;
 };
 
@@ -110,10 +108,10 @@ export type CoinsContextType = {
   setAvailableTickers: React.Dispatch<React.SetStateAction<Record<TickerKey, boolean>>>;
   availableCurrencies: Record<CurrencyKey, boolean>;
   setAvailableCurrencies: React.Dispatch<React.SetStateAction<Record<CurrencyKey, boolean>>>;
-  selectedCurrenciesForUI: Partial<Record<CurrencyKey, CurrencyValue>>;
-  setSelectedCurrenciesForUI: React.Dispatch<React.SetStateAction<Partial<Record<CurrencyKey, CurrencyValue>>>>;
-  selectedTickersForUI: Partial<Record<TickerKey, TickerValue>>;
-  setSelectedTickersForUI: React.Dispatch<React.SetStateAction<Partial<Record<TickerKey, TickerValue>>>>;
+  selectedCurrenciesForUI: CurrencyKey[];
+  setSelectedCurrenciesForUI: React.Dispatch<React.SetStateAction<CurrencyKey[]>>;
+  selectedTickersForUI: TickerKey[];
+  setSelectedTickersForUI: React.Dispatch<React.SetStateAction<TickerKey[]>>;
 };
 
 export type TickerQuote = {
@@ -161,4 +159,23 @@ export type TrendBoxProps = {
 export type TimeAgoProps = {
   timestamp: string | number | Date;
   interval?: number;
+};
+
+// ticker-picker.tsx
+export type TickerPickerProps = {
+  tickerKey: TickerKey;
+  onTickerChange: (ticker: TickerKey) => void;
+  options: Option[];
+};
+
+// checkbox-list.tsx
+export type CheckboxListProps<T extends string> = {
+  title: string;
+  items: Record<T, string>;
+  selectedItems: Record<T, boolean>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Record<T, boolean>>>;
+  maxSelection?: number;
+  minSelection?: number;
+  selectedKey: TickerKey | CurrencyKey;
+  style?: object;
 };

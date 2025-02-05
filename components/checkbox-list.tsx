@@ -1,22 +1,12 @@
-import { usePreferences } from '@/contexts/preferencesContext';
-import { CurrencyKey, TickerKey } from '@/types/types';
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
+
+import { usePreferences } from '@/contexts/preferencesContext';
+import { CurrencyKey, TickerKey, CheckboxListProps } from '@/types/types';
 import { Checkbox, useTheme, Text, Modal, Portal, Button } from 'react-native-paper';
 
 import { useCoins } from '@/contexts/coinsContext';
 import { isCurrencyKey, isTickerKey } from '@/utils/utils';
-
-interface CheckboxListProps<T extends string> {
-  title: string;
-  items: Record<T, string>;
-  selectedItems: Record<T, boolean>;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Record<T, boolean>>>;
-  maxSelection?: number;
-  minSelection?: number;
-  selectedKey: TickerKey | CurrencyKey;
-  style?: object;
-}
 
 export const CheckboxList = <T extends string>({
   title,
@@ -55,7 +45,7 @@ export const CheckboxList = <T extends string>({
       style={[
         styles.panel,
         { ...style },
-        { borderColor: colors.onPrimary, borderWidth: 2, backgroundColor: isThemeDark ? '#0003' : '#0002' },
+        { borderColor: colors.onPrimary, borderWidth: 2, backgroundColor: isThemeDark ? '#0003' : '#eee1' },
       ]}
     >
       <Text style={[styles.title, { fontFamily: 'Roboto_500Medium', marginVertical: 5, color: colors.onPrimary }]}>
@@ -68,19 +58,20 @@ export const CheckboxList = <T extends string>({
           (isChecked && selectedCount === minSelection) || (!isChecked && selectedCount === maxSelection);
 
         return (
-          <View key={key} style={[styles.checkboxContainer, { backgroundColor: 'transparent', marginVertical: 1 }]}>
-            <View style={[styles.checkboxAndLabel, { backgroundColor: 'transparent' }]}>
-              <Checkbox
+          <View key={key} style={[styles.checkboxContainer, { marginVertical: 1 }]}>
+            <View style={[styles.checkboxAndLabel, {}]}>
+              <Checkbox.Android
                 status={isChecked ? 'checked' : 'unchecked'}
-                // onPress={() => {
-                //   setSelectedItems((prev) => ({
-                //     ...prev,
-                //     [typedKey]: !isChecked,
-                //   }));
-                // }}
+                onPress={() => {
+                  setSelectedItems((prev) => ({
+                    ...prev,
+                    [typedKey]: !isChecked,
+                  }));
+                }}
+                mode="android"
                 uncheckedColor={colors.onPrimary}
                 disabled={disabled}
-                onPress={() => handleCheckboxPress(typedKey, isChecked)} // Calling the updated function
+                color={disabled ? colors.checkboxDisabled : isChecked ? colors.primary : colors.onPrimary}
               />
               <Text
                 style={{
