@@ -176,5 +176,6 @@ export type CheckboxListProps<T extends string> = {
   setSelectedItems: React.Dispatch<React.SetStateAction<Record<T, boolean>>>;
   maxSelection?: number;
   minSelection?: number;
+  selectedKey: TickerKey | CurrencyKey;
   style?: object;
 };
