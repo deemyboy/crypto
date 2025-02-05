@@ -13,7 +13,7 @@ export const CustomColors = {
     secondaryContainer: '#261c39',
     onSecondaryContainer: '#fff',
     onSurface: '#02abd3',
-    onSurfaceVariant: '#1e3561',
+    onSurfaceVariant: '#4e5581',
     onSurfaceDisabled: '#02abd3',
     tertiary: '#fb6aa2',
     tertiaryContainer: '#eb8393',
