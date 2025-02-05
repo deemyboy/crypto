@@ -1,3 +1,11 @@
+export const STORAGE_KEYS = {
+  COIN_STATE: 'coinState',
+  SELECTED_CURRENCIES: 'selectedCurrencies',
+  SELECTED_TICKERS: 'selectedTickers',
+  TICKER_OPTIONS: 'tickerOptions',
+  THEME: 'theme',
+};
+
 import { CoinState } from '@/types/types';
 import { MMKV } from 'react-native-mmkv';
 

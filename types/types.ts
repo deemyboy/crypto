@@ -101,6 +101,7 @@ export type CoinsContextType = {
   refreshing: boolean;
   setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
   tickerOptions: Option[];
+  setTickerOptions: React.Dispatch<React.SetStateAction<Option[]>>;
   handleTickerSelect: (value: TickerKey) => void;
   handleCurrencyChange: (value: CurrencyKey) => void;
   combinedTickerData: CombinedTickerDataType | null;

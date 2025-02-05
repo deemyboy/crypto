@@ -22,6 +22,7 @@ import {
   TickerKey,
   CoinState,
 } from '@/types/types';
+import { usePersistedSettings } from '@/hooks/usePersistedSettings';
 
 const getDynamicAvailableState = <T extends Record<string, boolean>>(
   specs: Record<string, string>,
@@ -43,6 +44,7 @@ const CoinsContext = createContext<CoinsContextType>({
   refreshing: false,
   setRefreshing: () => {},
   tickerOptions: [],
+  setTickerOptions: () => {},
   handleTickerSelect: () => {},
   handleCurrencyChange: () => {},
   combinedTickerData: null,
@@ -61,6 +63,7 @@ export const useCoins = () => {
 };
 
 export const CoinsProvider = ({ children }: any) => {
+  const { saveSettings, loadPersistedSettings } = usePersistedSettings();
   const [combinedTickerData, setCombinedTickerData] =
     // @ts-ignore - empty object allows for dynamic typing/extension
     useState<CombinedTickerDataType>({});
@@ -144,7 +147,7 @@ export const CoinsProvider = ({ children }: any) => {
 
   const makeTickerOptions = (optionsData: TickerKey[]) => {
     const _tickersOptions: Option[] = optionsData.map((key) => {
-      const value = getTicker(key); // Retrieve TickerValue using the helper function
+      const value = getTicker(key);
       return {
         label: `${value.split('-')[1].toUpperCase()} - ${value.split('-')[0].toUpperCase()}`,
         value: key,
@@ -208,40 +211,40 @@ export const CoinsProvider = ({ children }: any) => {
     };
   }, []);
 
-  const loadPersistedSettings = () => {
-    const storedSettings = getStoredObject('settings');
-    // console.log('🚀  |  file: coinsContext.tsx:237  |  loadPersistedSettings  |  storedSettings:', storedSettings);
-    // console.log(
-    //   '🚀  |  file: coinsContext.tsx:238  |  loadPersistedSettings  |  isEqualWith(storedSettings, coinState):',
-    //   isEqualWith(storedSettings, coinState)
-    // );
-    if (storedSettings && !isEqualWith(storedSettings, coinState)) {
-      setCoinState((prev) => ({
-        ...prev,
-        ...storedSettings,
-      }));
-    }
-  };
+  // const loadPersistedSettings = () => {
+  //   const storedSettings = getStoredObject('settings');
+  //   // console.log('🚀  |  file: coinsContext.tsx:237  |  loadPersistedSettings  |  storedSettings:', storedSettings);
+  //   // console.log(
+  //   //   '🚀  |  file: coinsContext.tsx:238  |  loadPersistedSettings  |  isEqualWith(storedSettings, coinState):',
+  //   //   isEqualWith(storedSettings, coinState)
+  //   // );
+  //   if (storedSettings && !isEqualWith(storedSettings, coinState)) {
+  //     setCoinState((prev) => ({
+  //       ...prev,
+  //       ...storedSettings,
+  //     }));
+  //   }
+  // };
 
-  const saveSettings = () => {
-    const storedSettings = getStoredObject('settings');
-    console.log('🚀  |  file: coinsContext.tsx:259  |  saveSettings  |:');
-    console.log(
-      '🚀  |  file: coinsContext.tsx:254  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
-      isEqualWith(storedSettings, coinState)
-    );
-    if (!isEqualWith(storedSettings, coinState)) {
-      console.log(
-        '🚀  |  file: coinsContext.tsx:259  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
-        isEqualWith(storedSettings, coinState)
-      );
-      setCoinState((prev) => {
-        console.log('🚀  |  file: coinsContext.tsx:263  |  setCoinState  |  prev:', prev, 'coinState', coinState);
-        storeObject('settings', prev);
-        return prev;
-      });
-    }
-  };
+  // const saveSettings = () => {
+  //   const storedSettings = getStoredObject('settings');
+  //   console.log('🚀  |  file: coinsContext.tsx:259  |  saveSettings  |:');
+  //   console.log(
+  //     '🚀  |  file: coinsContext.tsx:254  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
+  //     isEqualWith(storedSettings, coinState)
+  //   );
+  //   if (!isEqualWith(storedSettings, coinState)) {
+  //     console.log(
+  //       '🚀  |  file: coinsContext.tsx:259  |  saveSettings  |  isEqualWith(storedSettings, coinState):',
+  //       isEqualWith(storedSettings, coinState)
+  //     );
+  //     setCoinState((prev) => {
+  //       console.log('🚀  |  file: coinsContext.tsx:263  |  setCoinState  |  prev:', prev, 'coinState', coinState);
+  //       storeObject('settings', prev);
+  //       return prev;
+  //     });
+  //   }
+  // };
 
   const saveSettingsDebounced = useCallback(
     debounce(() => saveSettings(), 100),
@@ -279,6 +282,7 @@ export const CoinsProvider = ({ children }: any) => {
         setRefreshing,
         refreshing,
         tickerOptions,
+        setTickerOptions,
         handleTickerSelect,
         handleCurrencyChange,
         combinedTickerData,
